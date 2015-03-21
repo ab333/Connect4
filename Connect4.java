@@ -6,6 +6,7 @@ public class Connect4 {
 	public static void main(String[] args) {
 		Grid g = new Grid();
 		int col;
+		boolean allowedMove;
 		char player = 'X';
 		System.out.println("Play Against:\n" +
 				"1-Second Player\n" +
@@ -16,36 +17,42 @@ public class Connect4 {
 		g.drawBoard();
 		if(option == 1) {
 			do {
-				in = new Scanner(System.in);
-				col = in.nextInt();
-				g.refreshBoard(col,player); // Add Referee isAllowed while loop here
+				do {
+					in = new Scanner(System.in);
+					col = in.nextInt();
+					allowedMove = g.refreshBoard(col,player);
+				} while (!allowedMove); // Add Referee isAllowed here 
 				g.drawBoard();
 				///// Switch players
 				if(player == 'X')
 					player = 'O';
 				else
 					player = 'X';
-			} while (true);
+			} while (!g.boardFull());
 		}
 		else if(option == 2) {
 			do {
 				if(player == 'X') {
-					in = new Scanner(System.in);
-					col = in.nextInt(); // Add Referee isAllowed while loop here
-					g.refreshBoard(col,player);
+					do {
+						in = new Scanner(System.in);
+						col = in.nextInt();
+						allowedMove = g.refreshBoard(col,player);
+					} while (!allowedMove); // Add Referee isAllowed here
 					player = 'O';
 				}
 				else {
-				    Random rand = new Random();
-				    col = rand.nextInt((6 - 0) + 1) + 0; // Add Referee isAllowed while loop here
-				    g.refreshBoard(col,player);
+					do {
+						Random rand = new Random();
+						col = rand.nextInt((6 - 0) + 1) + 0;
+						allowedMove = g.refreshBoard(col,player);
+					} while (!allowedMove); // Add Referee isAllowed here
 					player = 'X';
 				}
 					
 				g.drawBoard();
 				
 				
-			} while (true);
+			} while (!g.boardFull());
 		}
 		else if(option == 3) {
 			// TODO
