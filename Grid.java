@@ -11,7 +11,7 @@ public class Grid {
 	}
 		//grid[1][1] = 5;
 	
-	void drawBoard () {
+	public void drawBoard () {
 		for(int n=0;n<7;n++)
 			System.out.print(" " + n + " ");
 		System.out.println();
@@ -23,7 +23,7 @@ public class Grid {
 		}
 		System.out.println();
 	}
-	boolean refreshBoard (int col, char disc) {
+	public boolean refreshBoard (int col, char disc) {
 		if (col > cols-1 || col < 0)
 			return false;
 		for (int i=0;i<6;i++)
@@ -33,14 +33,14 @@ public class Grid {
 			}
 		return false;
 	}
-	boolean boardFull () {
+	public boolean boardFull () {
 		for (int i=0;i<cols;i++) {
 			if (grid[i][rows-1] == '_')
 				return false;
 		}
 		return true;
 	}
-	public int rows;
-	public int cols;
-	public char[][] grid;// = new int[6][5];
+	private int rows;
+	private int cols;
+	private char[][] grid;// = new int[6][5];
 	}
