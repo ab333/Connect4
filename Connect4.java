@@ -29,6 +29,7 @@ public class Connect4 {
 				else
 					player = 'X';
 			} while (!g.boardFull());
+			
 		}
 		else if(option == 2) {
 			do {
@@ -56,6 +57,7 @@ public class Connect4 {
 		}
 		else if(option == 3) {
 			// TODO
-		}	
+		}
+		in.close();
 	}
 }
