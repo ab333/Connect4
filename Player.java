@@ -36,6 +36,7 @@ public class Player {
 			}
 			else
 				player = 'X';
+				board.drawBoard(); 
 		} while (!board.boardFull());
 		in.close();
 		
