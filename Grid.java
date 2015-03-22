@@ -1,8 +1,11 @@
+package connect4;
+
+
 public class Grid {
 	public Grid() {
 		cols = 7;
 		rows = 6;
-		hasWin = false;
+		hasWon = false;
 		grid = new char[7][6];
 		for( int i = 0 ; i < grid.length ; i++ ) { 
 	           for ( int j = 0 ; j < grid[i].length ; j++ ) { 
@@ -23,6 +26,7 @@ public class Grid {
 			System.out.println();
 		}
 		System.out.println();
+		System.out.println(); 
 	}
 	public boolean refreshBoard (int col, char disc) {
 		if (col > cols-1 || col < 0)
@@ -121,40 +125,40 @@ public class Grid {
 		{
 			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.verticalDown(col, row) || this.diagonalSE(col, row) || this.diagonalSW(col, row))
 			{
-				this.hasWin = true;
+				this.hasWon = true;
 			}
 		}
 		else if(col== 3 && row<3)
 		{
 			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.diagonalNE(col, row) || this.diagonalNW(col, row))
 			{
-				this.hasWin = true;
+				this.hasWon = true;
 			}
 		}
 		else if(col<3 && row>2)
 		{
 			if(this.verticalDown(col, row) || this.horizontalRight(col, row) || this.diagonalSE(col, row))
-				this.hasWin = true;
+				this.hasWon = true;
 		}
 		else if(col>3 && row>2)
 		{
 			if(this.verticalDown(col, row) || this.horizontalLeft(col, row) || this.diagonalSW(col, row))
 			{
-				this.hasWin = true;
+				this.hasWon = true;
 			}
 		}
 		else if(col<3 && row<3)
 		{
 			if(this.horizontalRight(col, row) || this.diagonalNE(col, row))
 			{
-				this.hasWin = true;
+				this.hasWon = true;
 			}
 		}
 		else if(col>3 && row<3)
 		{
 			if(this.horizontalLeft(col, row) || this.diagonalNW(col, row))
 			{
-				this.hasWin = true;
+				this.hasWon = true;
 			}
 		}
 		else
@@ -175,7 +179,7 @@ public class Grid {
 				hasWinFlag = false;
 				break;
 			}
-		}
+		} 
 		return hasWinFlag;
 		
 	}
@@ -190,6 +194,7 @@ public class Grid {
 				break;
 			}
 		}
+ 
 		return hasWinFlag;
 		
 	}
@@ -210,8 +215,8 @@ public class Grid {
 	boolean verticalDown(int col,int row)
 	{
 		boolean hasWinFlag = true;
-		for(int i = row-1 ; i<row-4 ;i--)
-		{
+		for(int i = row-1 ; i>row-4 ;i--)
+		{ 
 			if(grid[col][i]!=grid[col][row])
 			{
 				hasWinFlag = false;
@@ -257,6 +262,7 @@ public class Grid {
 		return hasWinFlag;
 		
 	}
+
 	boolean diagonalSE(int col,int row)
 	{
 		int localCol =col;
@@ -271,9 +277,8 @@ public class Grid {
 				hasWinFlag = false;
 				break;
 			}
-		}
-		return hasWinFlag;
-		
+		} 
+		return hasWinFlag;	
 	}
 	boolean diagonalSW(int col,int row)
 	{
@@ -294,30 +299,15 @@ public class Grid {
 		
 	}
 	
-
-	
-	public boolean HasWin() { // We can think about this fun. as getter function
-		return hasWin;
+	public void hasWon(char player) { // We can think about this fun. as getter function
+	 	if(hasWon) {
+	 		System.out.println("Player " + player + " has won.\n");
+	 		drawBoard();
+	 		System.exit(1);
+	 	}
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	private boolean hasWin;
+	private boolean hasWon;
 	private int rows;
 	private int cols;
 	private char[][] grid;// = new int[6][5];
