@@ -115,7 +115,54 @@ public class Grid {
 		else 
 			return 0;
 	}
-	
+	void setHasWin(int col,int row)
+	{
+		if(col==3 && row>2)
+		{
+			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.verticalDown(col, row) || this.diagonalSE(col, row) || this.diagonalSW(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else if(col== 3 && row<3)
+		{
+			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.diagonalNE(col, row) || this.diagonalNW(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else if(col<3 && row>2)
+		{
+			if(this.verticalDown(col, row) || this.horizontalRight(col, row) || this.diagonalSE(col, row))
+				this.hasWin = true;
+		}
+		else if(col>3 && row>2)
+		{
+			if(this.verticalDown(col, row) || this.horizontalLeft(col, row) || this.diagonalSW(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else if(col<3 && row<3)
+		{
+			if(this.horizontalRight(col, row) || this.diagonalNE(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else if(col>3 && row<3)
+		{
+			if(this.horizontalLeft(col, row) || this.diagonalNW(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else
+		{
+			System.exit(1);
+		}
+		
+	}
 	
 
 	boolean horizontalRight(int col,int row)
@@ -247,54 +294,7 @@ public class Grid {
 		
 	}
 	
-	void setHasWin(int col,int row)
-	{
-		if(col==3 && row>2)
-		{
-			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.verticalDown(col, row) || this.diagonalSE(col, row) || this.diagonalSW(col, row))
-			{
-				this.hasWin = true;
-			}
-		}
-		else if(col== 3 && row<3)
-		{
-			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.diagonalNE(col, row) || this.diagonalNW(col, row))
-			{
-				this.hasWin = true;
-			}
-		}
-		else if(col<3 && row>2)
-		{
-			if(this.verticalDown(col, row) || this.horizontalRight(col, row) || this.diagonalSE(col, row))
-				this.hasWin = true;
-		}
-		else if(col>3 && row>2)
-		{
-			if(this.verticalDown(col, row) || this.horizontalLeft(col, row) || this.diagonalSW(col, row))
-			{
-				this.hasWin = true;
-			}
-		}
-		else if(col<3 && row<3)
-		{
-			if(this.horizontalRight(col, row) || this.diagonalNE(col, row))
-			{
-				this.hasWin = true;
-			}
-		}
-		else if(col>3 && row<3)
-		{
-			if(this.horizontalLeft(col, row) || this.diagonalNW(col, row))
-			{
-				this.hasWin = true;
-			}
-		}
-		else
-		{
-			System.exit(1);
-		}
-		
-	}
+
 	
 	public boolean HasWin() { // We can think about this fun. as getter function
 		return hasWin;
