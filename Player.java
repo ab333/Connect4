@@ -1,3 +1,5 @@
+package connect4;
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -22,24 +24,22 @@ public class Player {
 			do {
 				
 				col = in.nextInt(); 
-			} while (!board.refreshBoard(col,player)); // Add Referee isAllowed here // LOOOOP !!! forever!! 
-			if(board.HasWin())
-			{
-				System.out.println("Player " + player + " has won.");
-				board.drawBoard();
-				System.exit(1);
-			}
+			} while (!board.refreshBoard(col,player)); // Add Referee isAllowed here
+			///// Switch players
+			board.hasWon(player);
 			if(player == 'X')
 			{
 				player = 'Y';
-				if(intelligenceMode)
+				if(intelligenceMode) { 
 					player = intelligence(board, player);
+				} 
 				else if (randomMode)
 					player = randomAgent(board,player); 
 			}
-			else
+			else 
 				player = 'X';
-				board.drawBoard(); 
+				board.drawBoard();
+			
 		} while (!board.boardFull());
 		in.close();
 		
@@ -51,6 +51,7 @@ public class Player {
 			Random rand = new Random();
 			col = rand.nextInt((6 - 0) + 1) + 0;
 		} while (!board.refreshBoard(col,player)); // Add Referee isAllowed here
+		board.hasWon(player); 
 		board.drawBoard();
 		return 'X'; 	
 	}	
