@@ -10,6 +10,7 @@ public class IntelligentAgent extends Player {
 	{	
 		super.intelligence(board, player);
 		board.refreshBoard(alphaBetaSearch(board), player);
+		board.hasWon(player); 
 		return 'X'; 
 	}
 	
