@@ -2,6 +2,7 @@ public class Grid {
 	public Grid() {
 		cols = 7;
 		rows = 6;
+		hasWin = false;
 		grid = new char[7][6];
 		for( int i = 0 ; i < grid.length ; i++ ) { 
 	           for ( int j = 0 ; j < grid[i].length ; j++ ) { 
@@ -31,6 +32,7 @@ public class Grid {
 		for (int i=0;i<6;i++)
 			if(grid[col][i] == '_') {
 				grid[col][i] = disc;
+				this.setHasWin(col, i);
 				return true;
 			}
 		return false;
@@ -113,6 +115,209 @@ public class Grid {
 		else 
 			return 0;
 	}
+	
+	
+
+	boolean horizontalRight(int col,int row)
+	{
+		boolean hasWinFlag = true;
+		for(int i = col+1 ; i< col+4; i++)
+		{
+			if(grid[i][row]!=grid[col][row])
+			{
+				hasWinFlag = false;
+				break;
+			}
+		}
+		return hasWinFlag;
+		
+	}
+	boolean horizontalLeft(int col,int row)
+	{
+		boolean hasWinFlag = true;
+		for(int i = col-1 ; i> col-4; i--)
+		{					//2
+			if(grid[i][row]!=grid[col][row])
+			{
+				hasWinFlag = false;
+				break;
+			}
+		}
+		return hasWinFlag;
+		
+	}
+	boolean verticalUp(int col,int row)
+	{
+		boolean hasWinFlag = true;
+		for(int i = row+1 ; i<row+4 ;i++)
+		{
+			if(grid[col][i]!=grid[col][row])
+			{
+				hasWinFlag = false;
+				break;
+			}
+		}
+		return hasWinFlag;
+		
+	}
+	boolean verticalDown(int col,int row)
+	{
+		boolean hasWinFlag = true;
+		for(int i = row-1 ; i<row-4 ;i--)
+		{
+			if(grid[col][i]!=grid[col][row])
+			{
+				hasWinFlag = false;
+				break;
+			}
+		}
+		return hasWinFlag;
+		
+	}
+	boolean diagonalNE(int col,int row)
+	{
+		int localCol =col;
+		int localRow = row;
+		boolean hasWinFlag = true;
+		for(int i = 0 ; i<3 ;i++)
+		{
+			localCol++;
+			localRow++;
+			if(grid[localCol][localRow]!=grid[col][row])
+			{
+				hasWinFlag = false;
+				break;
+			}
+		}
+		return hasWinFlag;
+		
+	}
+	boolean diagonalNW(int col,int row)
+	{
+		int localCol =col;
+		int localRow = row;
+		boolean hasWinFlag = true;
+		for(int i = 0 ; i<3 ;i++)
+		{
+			localCol--;
+			localRow++;
+			if(grid[localCol][localRow]!=grid[col][row])
+			{
+				hasWinFlag = false;
+				break;
+			}
+		}
+		return hasWinFlag;
+		
+	}
+	boolean diagonalSE(int col,int row)
+	{
+		int localCol =col;
+		int localRow = row;
+		boolean hasWinFlag = true;
+		for(int i = 0 ; i<3 ;i++)
+		{
+			localCol++;
+			localRow--;
+			if(grid[localCol][localRow]!=grid[col][row])
+			{
+				hasWinFlag = false;
+				break;
+			}
+		}
+		return hasWinFlag;
+		
+	}
+	boolean diagonalSW(int col,int row)
+	{
+		int localCol =col;
+		int localRow = row;
+		boolean hasWinFlag = true;
+		for(int i = 0 ; i<3 ;i++)
+		{
+			localCol--;
+			localRow--;
+			if(grid[localCol][localRow]!=grid[col][row])
+			{
+				hasWinFlag = false;
+				break;
+			}
+		}
+		return hasWinFlag;
+		
+	}
+	
+	void setHasWin(int col,int row)
+	{
+		if(col==3 && row>2)
+		{
+			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.verticalDown(col, row) || this.diagonalSE(col, row) || this.diagonalSW(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else if(col== 3 && row<3)
+		{
+			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.diagonalNE(col, row) || this.diagonalNW(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else if(col<3 && row>2)
+		{
+			if(this.verticalDown(col, row) || this.horizontalRight(col, row) || this.diagonalSE(col, row))
+				this.hasWin = true;
+		}
+		else if(col>3 && row>2)
+		{
+			if(this.verticalDown(col, row) || this.horizontalLeft(col, row) || this.diagonalSW(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else if(col<3 && row<3)
+		{
+			if(this.horizontalRight(col, row) || this.diagonalNE(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else if(col>3 && row<3)
+		{
+			if(this.horizontalLeft(col, row) || this.diagonalNW(col, row))
+			{
+				this.hasWin = true;
+			}
+		}
+		else
+		{
+			System.exit(1);
+		}
+		
+	}
+	
+	public boolean HasWin() { // We can think about this fun. as getter function
+		return hasWin;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	private boolean hasWin;
 	private int rows;
 	private int cols;
 	private char[][] grid;// = new int[6][5];
