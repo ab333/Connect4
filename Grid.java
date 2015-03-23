@@ -7,13 +7,12 @@ public class Grid {
 	private class NConnectedSequers
 	{
 		public boolean isNotNull = false;// this var. will be true only if there is n Connected Sequers
-		public ArrayList<int[]> sequersPostion = new ArrayList<int[]>();
+		public ArrayList<int[]> sequersPostion = new ArrayList<>();
 		
 	}
 	public Grid() {
 		cols = 7;
 		rows = 6;
-		//ArrayList<String> arrayList = new ArrayList<String>();
 		hasWon = false;
 		grid = new char[7][6];
 		for( int i = 0 ; i < grid.length ; i++ ) { 
@@ -67,6 +66,19 @@ public class Grid {
 		}
 		return count;
 	}
+        
+        	public int check4s (char player) {
+		int count = 0;
+		for (int i=0;i<rows;i++) {
+			for (int j=0;j<cols;j++) {
+				if (grid[j][i] == player) {
+					count += checkR (4, j, i)+checkC (4, j, i)+checkDU (4, j, i)+checkDD (4, j, i);
+				}
+			}
+		}
+		return count;
+	}
+                
 	public int check2s (char player) {
 		int count = 0;
 		for (int i=0;i<rows;i++) {
@@ -223,6 +235,10 @@ public class Grid {
 						|| this.checkDUWhitPostions (4, j, i).isNotNull
 						|| this.checkDDWhitPostions (4, j, i).isNotNull)
 						{
+//                                                    for(int r=0;r<4;r++)
+//                                                    {
+//                                                        System.out.print(this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[0]+""+""+this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[1]);
+//                                                    }
 							this.hasWon = true;
 						}
 					}

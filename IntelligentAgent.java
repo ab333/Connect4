@@ -61,8 +61,24 @@ public int alphaBetaSearch (Grid board) {
 	}*/
 	
 	private int evaluation(Grid state) {
-		// TODO 
-		return 0;
+                
+                int fourSequers = state.check4s('X'); // X is the max !! i do not know why !!
+                int threeSequers = state.check3s('X');
+                int twoSequers = state.check2s('X');
+                int oppfourSequers = state.check4s('Y');
+                int oppthreeSequers = state.check3s('Y');
+                int opptwoSequers = state.check2s('Y');
+                int bestValue = ((threeSequers * 100) + (twoSequers * 10)) - ((oppthreeSequers * 100) + (twoSequers * 10));
+                
+                if(fourSequers>0)
+                {
+                    return Integer.MAX_VALUE;
+                }
+                else if(oppfourSequers>0)
+                {
+                    return -Integer.MAX_VALUE;
+                }else
+		return bestValue;
 	}
 
 	public boolean isTerminal(TreeNode state) {
