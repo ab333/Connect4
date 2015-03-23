@@ -1,10 +1,19 @@
-package connect4;
+import java.util.ArrayList;
+
+
 
 
 public class Grid {
+	private class NConnectedSequers
+	{
+		public boolean isNotNull = false;// this var. will be true only if there is n Connected Sequers
+		public ArrayList<int[]> sequersPostion = new ArrayList<int[]>();
+		
+	}
 	public Grid() {
 		cols = 7;
 		rows = 6;
+		//ArrayList<String> arrayList = new ArrayList<String>();
 		hasWon = false;
 		grid = new char[7][6];
 		for( int i = 0 ; i < grid.length ; i++ ) { 
@@ -36,7 +45,6 @@ public class Grid {
 		for (int i=0;i<6;i++)
 			if(grid[col][i] == '_') {
 				grid[col][i] = disc;
-				this.setHasWin(col, i);
 				return true;
 			}
 		return false;
@@ -70,7 +78,8 @@ public class Grid {
 		}
 		return count;
 	}
-	int checkR (int n, int col, int row) {
+	
+	int  checkR (int n, int col, int row) {
 		char p = grid[col][row];
 		int countMe = 0;
 		for(int i=col;i<col+n && i<cols;i++) {
@@ -82,6 +91,27 @@ public class Grid {
 		else 
 			return 0;
 	}
+	
+	NConnectedSequers checkRWhitPostions (int n, int col, int row) {
+		NConnectedSequers connectedS = new NConnectedSequers();
+		char p = grid[col][row];
+		int countMe = 0;
+		for(int i=col;i<col+n && i<cols;i++) {
+			if (grid[i][row] == p)
+				countMe++;
+			int arr[] = new int[2];
+			arr[0] = i;
+			arr[1] = row;
+			connectedS.sequersPostion.add(arr);
+			}
+		if (countMe == n){
+			connectedS.isNotNull = true;
+			return connectedS;
+			}
+		else 
+			return connectedS;
+	}
+	
 	int checkC (int n, int col, int row) {
 		char p = grid[col][row];
 		int countMe = 0;
@@ -94,6 +124,29 @@ public class Grid {
 		else 
 			return 0;
 	}
+	
+	
+	NConnectedSequers checkCWhitPostions (int n, int col, int row) {
+		NConnectedSequers connectedS = new NConnectedSequers();
+		
+		char p = grid[col][row];
+		int countMe = 0;
+		for(int i=row;i<row+n && i<rows;i++) {
+			if (grid[col][i] == p)
+				countMe++;
+			int arr[] = new int[2];
+			arr[0] = col;
+			arr[1] = i;
+			connectedS.sequersPostion.add(arr);}
+		if (countMe == n){
+			connectedS.isNotNull = true;
+			return connectedS;
+			}
+		else 
+			return connectedS;
+	}
+	
+	
 	int checkDU (int n, int col, int row) {
 		char p = grid[col][row];
 		int countMe = 0;
@@ -105,6 +158,26 @@ public class Grid {
 			return 1;
 		else 
 			return 0;
+	}
+	
+	
+	NConnectedSequers checkDUWhitPostions (int n, int col, int row) {
+		NConnectedSequers connectedS = new NConnectedSequers();
+		char p = grid[col][row];
+		int countMe = 0;
+		for(int i=col,j=row;i<col+n && i<cols && j<row+n && j<rows;i++,j++) {
+			if (grid[i][j] == p)
+				countMe++;
+			int arr[] = new int[2];
+			arr[0] = i;
+			arr[1] = j;
+			connectedS.sequersPostion.add(arr);}
+		if (countMe== n){
+			connectedS.isNotNull = true;
+			return connectedS;
+			}
+		else 
+			return connectedS;
 	}
 	
 	int checkDD (int n, int col, int row) {
@@ -119,192 +192,43 @@ public class Grid {
 		else 
 			return 0;
 	}
-	void setHasWin(int col,int row)
-	{
-		if(col==3 && row>2)
-		{
-			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.verticalDown(col, row) || this.diagonalSE(col, row) || this.diagonalSW(col, row))
-			{
-				this.hasWon = true;
-			}
-		}
-		else if(col== 3 && row<3)
-		{
-			if(this.horizontalLeft(col, row) || this.horizontalRight(col, row) || this.diagonalNE(col, row) || this.diagonalNW(col, row))
-			{
-				this.hasWon = true;
-			}
-		}
-		else if(col<3 && row>2)
-		{
-			if(this.verticalDown(col, row) || this.horizontalRight(col, row) || this.diagonalSE(col, row))
-				this.hasWon = true;
-		}
-		else if(col>3 && row>2)
-		{
-			if(this.verticalDown(col, row) || this.horizontalLeft(col, row) || this.diagonalSW(col, row))
-			{
-				this.hasWon = true;
-			}
-		}
-		else if(col<3 && row<3)
-		{
-			if(this.horizontalRight(col, row) || this.diagonalNE(col, row))
-			{
-				this.hasWon = true;
-			}
-		}
-		else if(col>3 && row<3)
-		{
-			if(this.horizontalLeft(col, row) || this.diagonalNW(col, row))
-			{
-				this.hasWon = true;
-			}
-		}
-		else
-		{
-			System.exit(1);
-		}
-		
-	}
 	
-
-	boolean horizontalRight(int col,int row)
-	{
-		boolean hasWinFlag = true;
-		for(int i = col+1 ; i< col+4; i++)
-		{
-			if(grid[i][row]!=grid[col][row])
-			{
-				hasWinFlag = false;
-				break;
+	
+	NConnectedSequers checkDDWhitPostions (int n, int col, int row) {
+		NConnectedSequers connectedS = new NConnectedSequers();
+		char p = grid[col][row];
+		int countMe = 0;
+		for(int i=col,j=row;i<col+n && i<cols && j>row-n && j>-1;i++,j--) {
+			if (grid[i][j] == p)
+				countMe++;
+			int arr[] = new int[2];
+			arr[0] = i;
+			arr[1] = j;
+			connectedS.sequersPostion.add(arr);
 			}
-		} 
-		return hasWinFlag;
-		
-	}
-	boolean horizontalLeft(int col,int row)
-	{
-		boolean hasWinFlag = true;
-		for(int i = col-1 ; i> col-4; i--)
-		{					//2
-			if(grid[i][row]!=grid[col][row])
-			{
-				hasWinFlag = false;
-				break;
+		if (countMe == n){
+			connectedS.isNotNull = true;
+			return connectedS;
 			}
-		}
- 
-		return hasWinFlag;
-		
-	}
-	boolean verticalUp(int col,int row)
-	{
-		boolean hasWinFlag = true;
-		for(int i = row+1 ; i<row+4 ;i++)
-		{
-			if(grid[col][i]!=grid[col][row])
-			{
-				hasWinFlag = false;
-				break;
-			}
-		}
-		return hasWinFlag;
-		
-	}
-	boolean verticalDown(int col,int row)
-	{
-		boolean hasWinFlag = true;
-		for(int i = row-1 ; i>row-4 ;i--)
-		{ 
-			if(grid[col][i]!=grid[col][row])
-			{
-				hasWinFlag = false;
-				break;
-			}
-		}
-		return hasWinFlag;
-		
-	}
-	boolean diagonalNE(int col,int row)
-	{
-		int localCol =col;
-		int localRow = row;
-		boolean hasWinFlag = true;
-		for(int i = 0 ; i<3 ;i++)
-		{
-			localCol++;
-			localRow++;
-			if(grid[localCol][localRow]!=grid[col][row])
-			{
-				hasWinFlag = false;
-				break;
-			}
-		}
-		return hasWinFlag;
-		
-	}
-	boolean diagonalNW(int col,int row)
-	{
-		int localCol =col;
-		int localRow = row;
-		boolean hasWinFlag = true;
-		for(int i = 0 ; i<3 ;i++)
-		{
-			localCol--;
-			localRow++;
-			if(grid[localCol][localRow]!=grid[col][row])
-			{
-				hasWinFlag = false;
-				break;
-			}
-		}
-		return hasWinFlag;
-		
+		else 
+			return connectedS;
 	}
 
-	boolean diagonalSE(int col,int row)
-	{
-		int localCol =col;
-		int localRow = row;
-		boolean hasWinFlag = true;
-		for(int i = 0 ; i<3 ;i++)
-		{
-			localCol++;
-			localRow--;
-			if(grid[localCol][localRow]!=grid[col][row])
-			{
-				hasWinFlag = false;
-				break;
+	public boolean hasWon(char player) { // We can think about this fun. as getter function
+			for (int i=0;i<rows;i++) {
+				for (int j=0;j<cols;j++) {
+					if (grid[j][i] == player) {
+						if( this.checkRWhitPostions(4, j, i).isNotNull
+						|| this.checkCWhitPostions (4, j, i).isNotNull
+						|| this.checkDUWhitPostions (4, j, i).isNotNull
+						|| this.checkDDWhitPostions (4, j, i).isNotNull)
+						{
+							this.hasWon = true;
+						}
+					}
+				}
 			}
-		} 
-		return hasWinFlag;	
-	}
-	boolean diagonalSW(int col,int row)
-	{
-		int localCol =col;
-		int localRow = row;
-		boolean hasWinFlag = true;
-		for(int i = 0 ; i<3 ;i++)
-		{
-			localCol--;
-			localRow--;
-			if(grid[localCol][localRow]!=grid[col][row])
-			{
-				hasWinFlag = false;
-				break;
-			}
-		}
-		return hasWinFlag;
-		
-	}
-	
-	public void hasWon(char player) { // We can think about this fun. as getter function
-	 	if(hasWon) {
-	 		System.out.println("Player " + player + " has won.\n");
-	 		drawBoard();
-	 		System.exit(1);
-	 	}
+	 	return this.hasWon;
 	}
 
 	private boolean hasWon;

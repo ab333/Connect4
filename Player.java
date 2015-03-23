@@ -1,4 +1,4 @@
-package connect4;
+
 
 import java.util.Random;
 import java.util.Scanner;
@@ -26,7 +26,12 @@ public class Player {
 				col = in.nextInt(); 
 			} while (!board.refreshBoard(col,player)); // Add Referee isAllowed here
 			///// Switch players
-			board.hasWon(player);
+			if(board.hasWon(player))
+			{
+				board.drawBoard();
+				System.out.println("Player " + player + " has won.\n");
+		 		System.exit(1);
+			}
 			if(player == 'X')
 			{
 				player = 'Y';
