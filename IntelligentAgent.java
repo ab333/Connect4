@@ -68,7 +68,7 @@ public int alphaBetaSearch (Grid board) {
                 int oppfourSequers = state.check4s('Y');
                 int oppthreeSequers = state.check3s('Y');
                 int opptwoSequers = state.check2s('Y');
-                int bestValue = ((threeSequers * 100) + (twoSequers * 10)) - ((oppthreeSequers * 100) + (twoSequers * 10));
+                int bestValue = ((threeSequers * 100) + (twoSequers * 10)) - ((oppthreeSequers * 100) + (opptwoSequers * 10));
                 
                 if(fourSequers>0)
                 {
