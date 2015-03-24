@@ -1,6 +1,6 @@
+import java.util.*;
 public class IntelligentAgent extends Player {
-	private final int horizon = 15;
-	protected Grid tempBoard; 
+	private int horizon = 15;
 	public void startPlaying (Grid board, char player) 
 	{ 
 		super.intelligenceMode=true; 
@@ -14,60 +14,76 @@ public class IntelligentAgent extends Player {
 		return 'X'; 
 	}
 	
-public int alphaBetaSearch (Grid board) {
-		TreeNode currentState = new TreeNode(0,board,0); 
-		int bestMove = currentState.searchNode(maxValue(currentState, -Integer.MAX_VALUE, Integer.MAX_VALUE)).getAction();
-		return bestMove; 
+	public int alphaBetaSearch (Grid board)
+	{
+		Integer [] values;
+		values = new Integer[7];
+		int v = -Integer.MAX_VALUE;
+		int largest = v; 
+		List<Integer> valid = new ArrayList<Integer>();
+		board.validMoves(valid);
+		for (int i=0; i<valid.size(); i++){
+			board.refreshBoard(valid.get(i), 'Y');
+			v = Math.max(v, minValue(board,-Integer.MAX_VALUE,Integer.MAX_VALUE));
+			values[i]=v;
+			if (v>largest)
+				largest = v; 
+			board.removeMove(valid.get(i), board.lastRow(valid.get(i)));
+			}
+		System.out.println("Largest is: " + largest+ " action is: "+ java.util.Arrays.asList(values).indexOf(largest)); 
+		return java.util.Arrays.asList(values).indexOf(largest); 
 	}
 	
-	/*public int maxValue(TreeNode state, int alpha, int beta)
+	public int minValue (Grid state, int alpha, int beta)
 	{
-		if (isTerminal(state))
-			return evaluation(state.getBoard()); 
-		int v= -Integer.MAX_VALUE;
-		for (int i=0; i<state.successorLenght();i++)
-		{
-			if(tempBoard.refreshBoard(i, 'X')) 
-					state= new TreeNode (i,tempBoard,state.getDepth()); 
-			v= Math.max(v,minValue(state,alpha,beta)); 
-			if (v>=beta)
-				return v; 
-			alpha = Math.max(v,alpha); 
-			
-		}
-		return v; 
-	}*/
-	
-
-	/*public int minValue (TreeNode state, int alpha, int beta)
-	{
-		if(isTerminal(state))
-			return evaluation(state.getBoard());
-		int v= -Integer.MAX_VALUE; 
-		tempBoard = state.getBoard();
-		for (int i=0; i<7; i++)
-		{
-			if(tempBoard.refreshBoard(i, 'X'))
-			{
-				state= new TreeNode (i,tempBoard,state.getDepth());
-			}
-		//	state.refreshBoard(i, 'Y');
+		if(isTerminal())
+			return evaluation(state);
+		int v= Integer.MAX_VALUE;
+		List<Integer> valid = new ArrayList<Integer>() ;
+		state.validMoves(valid);
+		for (int i=0; i<valid.size(); i++)
+		{			
+			state.refreshBoard(valid.get(i), 'X');
 			v = Math.min(v, maxValue(state, alpha, beta)); 
-			if (v<=alpha)
-				return v; 
-			beta = Math.min(v, beta); 
+			if (v<=alpha)	{
+				state.removeMove(valid.get(i), state.lastRow(valid.get(i)));
+				return v;//beta cut-off
+			}
+			beta = Math.min(v, beta);
+			state.removeMove(valid.get(i), state.lastRow(valid.get(i)));
+		} 
+		return v; 
+	}
+	public int maxValue(Grid state, int alpha, int beta)
+	{
+		if (isTerminal())
+			return evaluation(state); 
+		int v= -Integer.MAX_VALUE;
+		List<Integer> valid = new ArrayList<Integer>() ;
+		state.validMoves(valid);
+		for (int i=0; i<valid.size();i++)
+		{
+			state.refreshBoard(valid.get(i), 'Y');
+			v= Math.max(v,minValue(state,alpha,beta)); 
+			if (v>=beta){
+				state.removeMove(valid.get(i), state.lastRow(valid.get(i)));
+				return v;//alpha cut-off
+			}
+			alpha = Math.max(v,alpha); 
+			state.removeMove(valid.get(i), state.lastRow(valid.get(i)));
 		}
 		return v; 
-	}*/
+	}
+	
 	
 	private int evaluation(Grid state) {
                 
-                int fourSequers = state.check4s('X'); // X is the max !! i do not know why !!
-                int threeSequers = state.check3s('X');
-                int twoSequers = state.check2s('X');
-                int oppfourSequers = state.check4s('Y');
-                int oppthreeSequers = state.check3s('Y');
-                int opptwoSequers = state.check2s('Y');
+                int fourSequers = state.check4s('Y'); // X is the max !! i do not know why !!
+                int threeSequers = state.check3s('Y');
+                int twoSequers = state.check2s('Y');
+                int oppfourSequers = state.check4s('X');
+                int oppthreeSequers = state.check3s('X');
+                int opptwoSequers = state.check2s('X');
                 int bestValue = ((threeSequers * 100) + (twoSequers * 10)) - ((oppthreeSequers * 100) + (opptwoSequers * 10));
                 
                 if(fourSequers>0)
@@ -81,11 +97,9 @@ public int alphaBetaSearch (Grid board) {
 		return bestValue;
 	}
 
-	public boolean isTerminal(TreeNode state) {
-		// TODO 
-		if (state.getDepth()==horizon)
-			return true;
-		return false; 
+
+	public boolean isTerminal() {
+		return ((horizon--)<=0); 
 
 	}
 	}
