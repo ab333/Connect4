@@ -1,8 +1,5 @@
 import java.util.ArrayList;
 
-
-
-
 public class Grid {
 	private class NConnectedSequers
 	{
@@ -22,7 +19,30 @@ public class Grid {
 		}
 	}
 		//grid[1][1] = 5;
-	
+	///-----Functions for AI Agent to use-------/// 
+	public void validMoves(List<Integer> valid)
+	{
+		for (int i=0; i<cols;i++)
+			for(int j=0; j<rows;j++)
+				if(grid[i][j]=='_'){
+					valid.add(i);
+					break; 
+				}
+	}
+	public int lastRow(int col)
+	{
+		for (int i=rows-1; i>-1; i--){
+			if(grid[col][i]!='_')
+				return i;
+			}
+		return 0;
+	}
+
+	public void removeMove(int col, int row)
+	{
+		grid[col][row]='_';
+	}
+	////--------END------///// 
 	public void drawBoard () {
 		for(int n=0;n<7;n++)
 			System.out.print(" " + n + " ");
