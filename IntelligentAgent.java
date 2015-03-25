@@ -10,7 +10,12 @@ public class IntelligentAgent extends Player {
 	{	
 		super.intelligence(board, player);
 		board.refreshBoard(alphaBetaSearch(board), player);
-		board.hasWon(player); 
+		if(board.hasWon(player))
+		{
+			System.out.println("Player: "+ player + " has won!"); 
+			board.drawBoard();
+			System.exit(1);
+		}
 		return 'X'; 
 	}
 	
@@ -76,12 +81,11 @@ public class IntelligentAgent extends Player {
 	}
 	
 	private int evaluation(Grid state) { 
-		 if(state.check4s('X')>0) 
+		if(state.hasWon('X')) 
 			 return (-Integer.MAX_VALUE);
-		 if(state.check4s('Y')>0) 
+		 if(state.hasWon('Y')) 
 			 return Integer.MAX_VALUE;	
-		 
-		 return ((state.check3s('Y') * 100) + (state.check2s('Y') * 10)) - ((state.check3s('X') * 100) + (state.check2s('X') * 10));
+		 return ((state.checkLines('Y').get(1) * 100) + (state.checkLines('Y').get(0) * 10)) - ((state.checkLines('X').get(2) * 100) + (state.checkLines('X').get(3) * 10));
 	}
 
 	private boolean isTerminal(int nodeHorizon) {
