@@ -48,7 +48,7 @@ public class IntelligentAgent extends Player {
 
 	private int minValue (Grid state, int alpha, int beta, int depth, char player)
 	{
-		if(isTerminal(depth))
+		if(isTerminal(depth) || state.getHasWon())
 			return evaluation(state, player);
 		int v= Integer.MAX_VALUE;
 		List<Integer> valid = new ArrayList<Integer>() ;
@@ -66,14 +66,14 @@ public class IntelligentAgent extends Player {
 			}
 			beta = Math.min(v, beta);
 			state.removeMove(valid.get(i), state.lastRow(valid.get(i)));
-			if(beta == -Integer.MAX_VALUE)
-				break;
+			//if(beta == -Integer.MAX_VALUE)
+			//	break;
 		} 
 		return v; 
 	}
 	private int maxValue(Grid state, int alpha, int beta, int depth, char player)
 	{
-		if (isTerminal(depth))
+		if (isTerminal(depth)|| state.getHasWon())
 			return evaluation(state, player);
 		int v= -Integer.MAX_VALUE;
 		List<Integer> valid = new ArrayList<Integer>() ;
@@ -88,22 +88,20 @@ public class IntelligentAgent extends Player {
 			}
 			alpha = Math.max(v,alpha); 
 			state.removeMove(valid.get(i), state.lastRow(valid.get(i)));
-			if (alpha==Integer.MAX_VALUE)
-				break; 
+		//	if (alpha==Integer.MAX_VALUE)
+			//	break; 
 		}
 		return v; 
 	}
 	
 	
 	private int evaluation(Grid state, char player) { 
-		if(player=='X') 
-			if(state.hasWon('Y')) 
+		if(player=='Y' && state.hasWon('X'))
 				 return (-Integer.MAX_VALUE);
-		if(player=='Y')
-			if(state.hasWon('X')) 
-				 return (-Integer.MAX_VALUE);
-		 if(state.hasWon(player)) 
-			 return Integer.MAX_VALUE;	
+		if(player=='X' && state.hasWon('Y'))
+			 return (-Integer.MAX_VALUE);
+		if(state.hasWon(player)) 
+			 return Integer.MAX_VALUE;		
 		 List<Integer> checkLines= new ArrayList<Integer>(state.checkLines(player));
 		 return ((checkLines.get(1) * 9) + (checkLines.get(0) * 2)) - ((checkLines.get(3) * 9) + (checkLines.get(2) * 2));
 	}
