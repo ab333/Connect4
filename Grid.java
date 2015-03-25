@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Grid {
 	private class NConnectedSequers
@@ -83,19 +86,19 @@ public class Grid {
 		for (int i=0;i<rows;i++) {
 			for (int j=0;j<cols;j++) {
 				if (grid[j][i] == player) {
-					count += checkR (3, j, i)+checkC (3, j, i)+checkDU (3, j, i)+checkDD (3, j, i);
+					count += checkR (3, j, i).size()+checkC (3, j, i).size()+checkDU (3, j, i).size()+checkDD (3, j, i).size();
 				}
 			}
 		}
 		return count;
 	}
         
-        	public int check4s (char player) {
+        public int check4s (char player) {
 		int count = 0;
 		for (int i=0;i<rows;i++) {
 			for (int j=0;j<cols;j++) {
 				if (grid[j][i] == player) {
-					count += checkR (4, j, i)+checkC (4, j, i)+checkDU (4, j, i)+checkDD (4, j, i);
+					count += checkR (4, j, i).size()+checkC (4, j, i).size()+checkDU (4, j, i).size()+checkDD (4, j, i).size();
 				}
 			}
 		}
@@ -107,7 +110,7 @@ public class Grid {
 		for (int i=0;i<rows;i++) {
 			for (int j=0;j<cols;j++) {
 				if (grid[j][i] == player) {
-					count += checkR (2, j, i)+checkC (2, j, i)+checkDU (2, j, i)+checkDD (2, j, i);
+					count += checkR (2, j, i).size()+checkC (2, j, i).size()+checkDU (2, j, i).size()+checkDD (2, j, i).size();
 				}
 			}
 		}
