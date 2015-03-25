@@ -8,6 +8,8 @@ public class Player {
 	private int col;
 	protected boolean intelligenceMode; 
 	private boolean randomMode; 
+	private boolean agentPlayAgent;
+	private boolean userPlay;
 	
 	public Player () {
 		intelligenceMode = false; 
@@ -17,33 +19,40 @@ public class Player {
 	{
 		randomMode = true; 
 	}
-
+	public void activateAgentVsAgent()
+	{
+		agentPlayAgent=true;
+		userPlay=false; 
+	}
 	public void startPlaying(Grid board,char player) {
 		Scanner in = new Scanner(System.in);
 		do {
-			do {
-				
+
+			if(agentPlayAgent)
+				intelligence(board, player);
+			if(userPlay)
+				do {
 				col = in.nextInt(); 
-			} while (!board.refreshBoard(col,player)); // Add Referee isAllowed here
+				} while (!board.refreshBoard(col,player)); // Add Referee isAllowed here
+
 			///// Switch players
-			if(board.hasWon(player))
-			{
-				board.drawBoard();
-				System.out.println("Player " + player + " has won.\n");
-		 		System.exit(1);
-			}
+			if(!agentPlayAgent && board.hasWon(player))// Ai has his own (hasWon) func. no need to check twice.
+				{
+					System.out.println("Player: "+ player + " has won!"); 
+					board.drawBoard();
+					System.exit(1);
+				}
 			if(player == 'X')
 			{
 				player = 'Y';
-				if(intelligenceMode) { 
+				if(intelligenceMode)  
 					player = intelligence(board, player);
-				} 
 				else if (randomMode)
 					player = randomAgent(board,player); 
 			}
 			else 
 				player = 'X';
-				board.drawBoard();
+			board.drawBoard();
 			
 		} while (!board.boardFull());
 		in.close();
