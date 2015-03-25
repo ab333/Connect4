@@ -14,6 +14,7 @@ public class Player {
 	public Player () {
 		intelligenceMode = false; 
 		randomMode = false; 
+		userPlay = true;
 	}
 	public void activateRandomPlayer()
 	{
