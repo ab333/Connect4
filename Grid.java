@@ -69,6 +69,7 @@ public class Grid {
 		for (int i=0;i<6;i++)
 			if(grid[col][i] == '_') {
 				grid[col][i] = disc;
+				this.hasWon(disc);
 				return true;
 			}
 		return false;
@@ -388,13 +389,16 @@ public class Grid {
 //                                                        System.out.print(this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[0]+""+""+this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[1]);
 //                                                    }
 							this.hasWon = true;
+							return hasWon;
 						}
 					}
 				}
 			}
-	 	return this.hasWon;
+	 	return false;
 	}
-
+	protected boolean getHasWon(){
+		return hasWon; 
+	}
 	private boolean hasWon;
 	private int rows;
 	private int cols;
