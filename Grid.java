@@ -80,42 +80,7 @@ public class Grid {
 		}
 		return true;
 	}
-	// DONT USE CHECK3S IT WILL BE REMOVED!
-	public int check3s (char player) {
-		int count = 0;
-		for (int i=0;i<rows;i++) {
-			for (int j=0;j<cols;j++) {
-				if (grid[j][i] == player) {
-					count += checkR (3, j, i).size()+checkC (3, j, i).size()+checkDU (3, j, i).size()+checkDD (3, j, i).size();
-				}
-			}
-		}
-		return count;
-	}
-        
-        public int check4s (char player) {
-		int count = 0;
-		for (int i=0;i<rows;i++) {
-			for (int j=0;j<cols;j++) {
-				if (grid[j][i] == player) {
-					count += checkR (4, j, i).size()+checkC (4, j, i).size()+checkDU (4, j, i).size()+checkDD (4, j, i).size();
-				}
-			}
-		}
-		return count;
-	}
-        // DONT USE CHECK2S IT WILL BE REMOVED!
-	public int check2s (char player) { 
-		int count = 0;
-		for (int i=0;i<rows;i++) {
-			for (int j=0;j<cols;j++) {
-				if (grid[j][i] == player) {
-					count += checkR (2, j, i).size()+checkC (2, j, i).size()+checkDU (2, j, i).size()+checkDD (2, j, i).size();
-				}
-			}
-		}
-		return count;
-	}
+	
 	
 	public List<Integer> checkLines (char p) {
 		List<Integer> returnList = new ArrayList<Integer>();
@@ -154,7 +119,7 @@ public class Grid {
 		return returnList;
 	}
 	
-	List<Integer> checkR (int n, int col, int row) {
+	private List<Integer> checkR (int n, int col, int row) {
 		List<Integer> returnList = new ArrayList<Integer>();
 		//List<Integer> nullLocations = new ArrayList<Integer>();
 		int nullLocation = 99;
@@ -203,7 +168,7 @@ public class Grid {
 		return returnList;
 	}
 	
-	NConnectedSequers checkRWhitPostions (int n, int col, int row) {
+	private NConnectedSequers checkRWhitPostions (int n, int col, int row) {
 		NConnectedSequers connectedS = new NConnectedSequers();
 		char p = grid[col][row];
 		int countMe = 0;
@@ -223,7 +188,7 @@ public class Grid {
 			return connectedS;
 	}
 	
-	List<Integer> checkC (int n, int col, int row) {
+	private List<Integer> checkC (int n, int col, int row) {
 		List<Integer> returnList = new ArrayList<Integer>();
 		char p = grid[col][row];
 		int countMe = 0;
@@ -251,7 +216,7 @@ public class Grid {
 	}
 	
 	
-	NConnectedSequers checkCWhitPostions (int n, int col, int row) {
+	private NConnectedSequers checkCWhitPostions (int n, int col, int row) {
 		NConnectedSequers connectedS = new NConnectedSequers();
 		
 		char p = grid[col][row];
@@ -272,7 +237,7 @@ public class Grid {
 	}
 	
 	
-	List<Integer> checkDU (int n, int col, int row) {
+	private List<Integer> checkDU (int n, int col, int row) {
 		List<Integer> returnList = new ArrayList<Integer>();
 		char p = grid[col][row];
 		int countMe = 0;
@@ -321,7 +286,7 @@ public class Grid {
 	}
 	
 	
-	NConnectedSequers checkDUWhitPostions (int n, int col, int row) {
+	private NConnectedSequers checkDUWhitPostions (int n, int col, int row) {
 		NConnectedSequers connectedS = new NConnectedSequers();
 		char p = grid[col][row];
 		int countMe = 0;
@@ -340,7 +305,7 @@ public class Grid {
 			return connectedS;
 	}
 	
-	List<Integer> checkDD (int n, int col, int row) {
+	private List<Integer> checkDD (int n, int col, int row) {
 		List<Integer> returnList = new ArrayList<Integer>();
 		char p = grid[col][row];
 		int countMe = 0;
@@ -389,7 +354,7 @@ public class Grid {
 	}
 	
 	
-	NConnectedSequers checkDDWhitPostions (int n, int col, int row) {
+	private NConnectedSequers checkDDWhitPostions (int n, int col, int row) {
 		NConnectedSequers connectedS = new NConnectedSequers();
 		char p = grid[col][row];
 		int countMe = 0;
