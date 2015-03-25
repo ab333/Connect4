@@ -38,9 +38,11 @@ public class Grid {
 		return 0;
 	}
 
-	public void removeMove(int col, int row)
-	{
-		grid[col][row]='_';
+	public void removeMove(int col, int row) {
+		if(col<cols && col>=0 && row >=0 && row<rows)
+			grid[col][row]='_';
+		if(hasWon)
+			hasWon=false;
 	}
 	////--------END------///// 
 	public void drawBoard () {
