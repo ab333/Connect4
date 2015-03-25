@@ -1,6 +1,6 @@
 import java.util.*;
 public class IntelligentAgent extends Player {
-	private int horizon = 15;
+	private int horizon = 5;
 	public void startPlaying (Grid board, char player) 
 	{ 
 		super.intelligenceMode=true; 
@@ -36,7 +36,7 @@ public class IntelligentAgent extends Player {
 			board.removeMove(valid.get(i), board.lastRow(valid.get(i)));
 			}
 
-		return java.util.Arrays.asList(values).indexOf(largest); 
+		return valid.get(java.util.Arrays.asList(values).indexOf(largest));//careful son!!
 	}
 
 	public int minValue (Grid state, int alpha, int beta, int depth)
