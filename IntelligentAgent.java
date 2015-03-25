@@ -85,7 +85,8 @@ public class IntelligentAgent extends Player {
 			 return (-Integer.MAX_VALUE);
 		 if(state.hasWon('Y')) 
 			 return Integer.MAX_VALUE;	
-		 return ((state.checkLines('Y').get(1) * 100) + (state.checkLines('Y').get(0) * 10)) - ((state.checkLines('X').get(2) * 100) + (state.checkLines('X').get(3) * 10));
+		 List<Integer> checkLines= new ArrayList<Integer>(state.checkLines('Y'));
+		 return ((checkLines.get(1) * 100) + (checkLines.get(0) * 10)) - ((checkLines.get(2) * 100) + (checkLines.get(3) * 10));
 	}
 
 	private boolean isTerminal(int nodeHorizon) {
