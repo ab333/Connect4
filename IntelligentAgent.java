@@ -35,7 +35,9 @@ public class IntelligentAgent extends Player {
 				largest = v; 
 			board.removeMove(valid.get(i), board.lastRow(valid.get(i)));
 			}
-
+		for (int i=0; i<valid.size();i++)
+			System.out.println("Child ["+ i +"] value: " + values[i]);//print child eval(); 
+		System.out.println("Largest is: " + largest+ " action is: "+ java.util.Arrays.asList(values).indexOf(largest));
 		return valid.get(java.util.Arrays.asList(values).indexOf(largest));//careful son!!
 	}
 
