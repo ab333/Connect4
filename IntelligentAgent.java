@@ -32,7 +32,7 @@ public class IntelligentAgent extends Player {
 		board.validMoves(valid);
 		for (int i=0; i<valid.size(); i++){
 			board.refreshBoard(valid.get(i), player);
-			v = Math.max(v, minValue(board,-Integer.MAX_VALUE,Integer.MAX_VALUE, 0, player));
+			v = minValue(board,-Integer.MAX_VALUE,Integer.MAX_VALUE, 0, player);
 			values[i]=v;
 			if (v>largest)
 				largest = v; 
