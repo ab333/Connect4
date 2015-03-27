@@ -1,6 +1,5 @@
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -473,9 +472,7 @@ public class Grid {
         
         public boolean hasWon(char player)
         {
-            Date dNow = new Date();
-            SimpleDateFormat ft = new SimpleDateFormat ("E hh:mm:ss:SSSS a zzz");
-            int startPointDSE = 0;
+        	int startPointDSE = 0;
             int startPointDNE = 0;
                 
             if(player == 'X')
@@ -522,7 +519,6 @@ public class Grid {
                     if(this.diagonalNE(player, startPointDNE, startPointDNE))
                     {
                         this.hasWon = true;
-                        System.out.println("Current Date: " + ft.format(dNow));
                         return hasWon; 
                     }
                 }
@@ -564,8 +560,6 @@ public class Grid {
             return false;
         }
 //	public boolean hasWon(char player) { // We can think about this fun. as getter function
-//            Date dNow = new Date();
-//            SimpleDateFormat ft = new SimpleDateFormat ("E hh:mm:ss:SSSS a zzz");
 //            for (int i=0;i<rows;i++) {
 //                for (int j=0;j<cols;j++) {
 //                    if (grid[j][i] == player) {
@@ -580,7 +574,6 @@ public class Grid {
 //
 //                        //}
 //			this.hasWon = true;
-//                        System.out.println("Current Date: " + ft.format(dNow));
 //			return hasWon;
 //                        
 //			}
