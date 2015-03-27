@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -472,7 +471,7 @@ public class Grid {
         
         public boolean hasWon(char player)
         {
-        	int startPointDSE = 0;
+            int startPointDSE = 0;
             int startPointDNE = 0;
                 
             if(player == 'X')
@@ -497,9 +496,9 @@ public class Grid {
             {
                 startPointDSE = this.y_LastTry_C + this.y_lastTry_R;
                 startPointDNE = this.y_LastTry_C - this.y_lastTry_R;
-                if(this.x_lastTry_R >=3)
+                if(this.y_lastTry_R >=3)
                 {
-                    if(this.vertical(player, this.x_LastTry_C, this.x_lastTry_R))
+                    if(this.vertical(player, this.y_LastTry_C, this.y_lastTry_R))
                     {
                         this.hasWon = true;
 			return hasWon;
@@ -559,7 +558,7 @@ public class Grid {
             ////////////////////////
             return false;
         }
-//	public boolean hasWon(char player) { // We can think about this fun. as getter function
+//	public boolean hasWon2(char player) { // We can think about this fun. as getter function
 //            for (int i=0;i<rows;i++) {
 //                for (int j=0;j<cols;j++) {
 //                    if (grid[j][i] == player) {
@@ -574,6 +573,7 @@ public class Grid {
 //
 //                        //}
 //			this.hasWon = true;
+//                        //System.out.println("Current Date: " + ft.format(dNow));
 //			return hasWon;
 //                        
 //			}
@@ -582,13 +582,13 @@ public class Grid {
 //            }
 //            return false;
 //	}
-	protected boolean getHasWon(){
-		return hasWon; 
-	}
-    private int x_LastTry_C; // these vars. will be used by HasWon.
-    private int x_lastTry_R; //^
-    private int y_LastTry_C; //^
-    private int y_lastTry_R; //^
+ 	public boolean getHasWon(){
+ 		return hasWon; 
+ 	}
+        private int x_LastTry_C; // these vars. will be used by HasWon.
+        private int x_lastTry_R; //^
+        private int y_LastTry_C; //^
+        private int y_lastTry_R; //^
 	private boolean hasWon;
 	private int rows;
 	private int cols;
