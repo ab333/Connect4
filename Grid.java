@@ -1,4 +1,6 @@
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,6 +71,16 @@ public class Grid {
 		for (int i=0;i<6;i++)
 			if(grid[col][i] == '_') {
 				grid[col][i] = disc;
+                                if(disc == 'X')
+                                {
+                                    this.x_LastTry_C = col;
+                                    this.x_lastTry_R = i;
+                                }
+                                else
+                                {
+                                    this.y_LastTry_C = col;
+                                    this.y_lastTry_R = i;
+                                }
 				this.hasWon(disc);
 				return true;
 			}
@@ -374,31 +386,216 @@ public class Grid {
 		else 
 			return connectedS;
 	}
-
-	public boolean hasWon(char player) { // We can think about this fun. as getter function
-			for (int i=0;i<rows;i++) {
-				for (int j=0;j<cols;j++) {
-					if (grid[j][i] == player) {
-						if( this.checkRWhitPostions(4, j, i).isNotNull
-						|| this.checkCWhitPostions (4, j, i).isNotNull
-						|| this.checkDUWhitPostions (4, j, i).isNotNull
-						|| this.checkDDWhitPostions (4, j, i).isNotNull)
-						{
-//                                                    for(int r=0;r<4;r++)
-//                                                    {
-//                                                        System.out.print(this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[0]+""+""+this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[1]);
-//                                                    }
-							this.hasWon = true;
-							return hasWon;
-						}
-					}
-				}
-			}
-	 	return false;
+        private boolean diagonalNE(char player, int col,int row)
+	{
+		boolean hasWonFlag = false;
+		for(int i=col,j=row; i<this.cols && j<this.rows ;i++,j++)
+		{
+                    int sequersCount = 0;
+                    while(grid[i][j] == player)
+                        {
+                            sequersCount++;
+                            i++;j++;
+                            if(sequersCount == 4)
+                            {
+                               hasWonFlag = true;
+                                break;
+                            }
+                            if(i>=this.cols || j>=this.rows)
+                            {break;}
+                        }
+		}
+		return hasWonFlag;
+		
 	}
+        
+        private boolean diagonalSE(char player, int col,int row)
+	{
+		boolean hasWonFlag = false;
+		for(int i=col,j=row; i<this.cols && j>-1 ;i++,j--)
+		{
+                    int sequersCount = 0;
+                    while(grid[i][j] == player)
+                        {
+                            sequersCount++;
+                            i++;j--;
+                            if(sequersCount == 4)
+                            {
+                               hasWonFlag = true;
+                                break;
+                            }
+                            if(i>=this.cols || j<0)
+                            {break;}
+                        }
+		}
+		return hasWonFlag;
+		
+	}
+        
+        private boolean vertical(char player, int col,int row)
+	{
+		boolean hasWinFlag = true;
+		for(int i = row-1 ; i>row-4 ;i--)
+		{ 
+			if(grid[col][i]!=player)
+			{
+				hasWinFlag = false;
+				break;
+			}
+		}
+		return hasWinFlag;
+		
+	}
+        
+        private boolean horizontal(char player, int col,int row)
+	{
+		boolean hasWonFlag = false;
+		for(int i = col ; i< this.cols; i++)
+		{
+                    int sequersCount = 0;
+                    while(grid[i][row] == player)
+                        {
+                            sequersCount++;
+                            i++;
+                            if(sequersCount == 4)
+                            {
+                               hasWonFlag = true;
+                                break;
+                            }
+                            if(i>=this.cols)
+                            {break;}
+                        }
+		}
+ 
+		return hasWonFlag;
+		
+	}
+        
+        public boolean hasWon(char player)
+        {
+            Date dNow = new Date();
+            SimpleDateFormat ft = new SimpleDateFormat ("E hh:mm:ss:SSSS a zzz");
+            int startPointDSE = 0;
+            int startPointDNE = 0;
+                
+            if(player == 'X')
+            {
+                startPointDSE = this.x_LastTry_C + this.x_lastTry_R;
+                startPointDNE = this.x_LastTry_C - this.x_lastTry_R;
+                if(this.x_lastTry_R >=3)
+                {
+                    if(this.vertical(player, this.x_LastTry_C, this.x_lastTry_R))
+                    {
+                        this.hasWon = true;
+			return hasWon;
+                    }
+                }
+                if(this.horizontal(player, 0, this.x_lastTry_R))
+                {
+                        this.hasWon = true;
+                        return hasWon; 
+                } 
+            }
+            else
+            {
+                startPointDSE = this.y_LastTry_C + this.y_lastTry_R;
+                startPointDNE = this.y_LastTry_C - this.y_lastTry_R;
+                if(this.x_lastTry_R >=3)
+                {
+                    if(this.vertical(player, this.x_LastTry_C, this.x_lastTry_R))
+                    {
+                        this.hasWon = true;
+			return hasWon;
+                    }
+                }
+                if(this.horizontal(player, 0, this.x_lastTry_R))
+                {
+                        this.hasWon = true;
+                        return hasWon; 
+                }
+            }
+            
+            /////////////////////////////
+            
+            if(startPointDNE == 0)
+                {
+                    if(this.diagonalNE(player, startPointDNE, startPointDNE))
+                    {
+                        this.hasWon = true;
+                        System.out.println("Current Date: " + ft.format(dNow));
+                        return hasWon; 
+                    }
+                }
+            else if(startPointDNE<0 && startPointDNE > -3)
+                {
+                    if(this.diagonalNE(player, 0, Math.abs(startPointDNE)))
+                    {
+                        this.hasWon = true;
+                        return hasWon; 
+                    }
+                }
+            else if(startPointDNE>0 && startPointDNE<4)
+                {
+                    if(this.diagonalNE(player, startPointDNE, 0))
+                    {
+                        this.hasWon = true;
+                        return hasWon; 
+                    }
+                }
+            ////////////////////////////////////
+            
+            if(startPointDSE >= 3 && startPointDSE<=5)
+            {
+                if(this.diagonalSE(player, 0, startPointDSE))
+                {
+                        this.hasWon = true;
+                        return hasWon;   
+                }
+            }
+            else if(startPointDSE >=6 && startPointDSE<=8)
+            {
+                if(this.diagonalSE(player, startPointDSE-5, 5))
+                {
+                        this.hasWon = true;
+                        return hasWon;   
+                }
+            }
+            ////////////////////////
+            return false;
+        }
+//	public boolean hasWon(char player) { // We can think about this fun. as getter function
+//            Date dNow = new Date();
+//            SimpleDateFormat ft = new SimpleDateFormat ("E hh:mm:ss:SSSS a zzz");
+//            for (int i=0;i<rows;i++) {
+//                for (int j=0;j<cols;j++) {
+//                    if (grid[j][i] == player) {
+//                        if( this.checkRWhitPostions(4, j, i).isNotNull
+//                                || this.checkCWhitPostions (4, j, i).isNotNull
+//                                || this.checkDUWhitPostions (4, j, i).isNotNull
+//                                || this.checkDDWhitPostions (4, j, i).isNotNull)
+//                        {
+//   //                         for(int r=0;r<4;r++)
+// //                           {
+////                            System.out.print(this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[0]+""+""+this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[1]);
+//
+//                        //}
+//			this.hasWon = true;
+//                        System.out.println("Current Date: " + ft.format(dNow));
+//			return hasWon;
+//                        
+//			}
+//                    }
+//                }
+//            }
+//            return false;
+//	}
 	protected boolean getHasWon(){
 		return hasWon; 
 	}
+    private int x_LastTry_C; // these vars. will be used by HasWon.
+    private int x_lastTry_R; //^
+    private int y_LastTry_C; //^
+    private int y_lastTry_R; //^
 	private boolean hasWon;
 	private int rows;
 	private int cols;
