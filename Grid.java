@@ -504,7 +504,7 @@ public class Grid {
 			return hasWon;
                     }
                 }
-                if(this.horizontal(player, 0, this.x_lastTry_R))
+                if(this.horizontal(player, 0, this.y_lastTry_R))
                 {
                         this.hasWon = true;
                         return hasWon; 
