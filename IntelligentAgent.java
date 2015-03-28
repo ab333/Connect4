@@ -48,11 +48,11 @@ public class IntelligentAgent extends Player {
 
 	private int minValue (Grid state, int alpha, int beta, int depth, char player)
 	{
-		if(isTerminal(depth) || state.getHasWon())
-			return evaluation(state, player);
 		int v= Integer.MAX_VALUE;
 		List<Integer> valid = new ArrayList<Integer>() ;
 		state.validMoves(valid); 
+		if(isTerminal(depth) || state.getHasWon()|| valid.size()==0)
+			return evaluation(state, player);
 		for (int i=0; i<valid.size(); i++)
 		{	
 			if(player=='Y')
@@ -73,11 +73,11 @@ public class IntelligentAgent extends Player {
 	}
 	private int maxValue(Grid state, int alpha, int beta, int depth, char player)
 	{
-		if (isTerminal(depth)|| state.getHasWon())
-			return evaluation(state, player);
 		int v= -Integer.MAX_VALUE;
 		List<Integer> valid = new ArrayList<Integer>() ;
 		state.validMoves(valid); 
+		if(isTerminal(depth) || state.getHasWon()|| valid.size()==0)
+			return evaluation(state, player);
 		for (int i=0; i<valid.size();i++)
 		{
 			state.refreshBoard(valid.get(i), player);
