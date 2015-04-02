@@ -9,7 +9,6 @@ public class IntelligentAgent extends Player {
 	}
 	public char intelligence(Grid board, char player)
 	{	
-		super.intelligence(board, player); 
 		board.refreshBoard(alphaBetaSearch(board,player), player)
 		if(board.hasWon(player))
 		{
@@ -40,9 +39,6 @@ public class IntelligentAgent extends Player {
 			if(largest==Integer.MAX_VALUE)
 				break; 
 			}  
-		for (int i=0; i<valid.size();i++)
-			System.out.println("Child ["+ i +"] value: " + values[i]);
-		System.out.println("Largest is: " + largest+ " action is: "+ valid.get(java.util.Arrays.asList(values).indexOf(largest)));
 		return valid.get(java.util.Arrays.asList(values).indexOf(largest)); 
 	}
 
@@ -66,8 +62,7 @@ public class IntelligentAgent extends Player {
 			}
 			beta = Math.min(v, beta);
 			state.removeMove(valid.get(i), state.lastRow(valid.get(i)));
-			//if(beta == -Integer.MAX_VALUE)
-			//	break;
+
 		} 
 		return v; 
 	}
@@ -88,8 +83,6 @@ public class IntelligentAgent extends Player {
 			}
 			alpha = Math.max(v,alpha); 
 			state.removeMove(valid.get(i), state.lastRow(valid.get(i)));
-		//	if (alpha==Integer.MAX_VALUE)
-			//	break; 
 		}
 		return v; 
 	}
@@ -97,13 +90,13 @@ public class IntelligentAgent extends Player {
 	
 	private int evaluation(Grid state, char player) { 
 		if(player=='Y' && state.hasWon('X'))
-				 return (-Integer.MAX_VALUE);
+			return (-Integer.MAX_VALUE);
 		if(player=='X' && state.hasWon('Y'))
-			 return (-Integer.MAX_VALUE);
+			return (-Integer.MAX_VALUE);
 		if(state.hasWon(player)) 
-			 return Integer.MAX_VALUE;		
-		 List<Integer> checkLines= new ArrayList<Integer>(state.checkLines(player));
-		 return ((checkLines.get(1) * 9) + (checkLines.get(0) * 2)) - ((checkLines.get(3) * 9) + (checkLines.get(2) * 2));
+			return Integer.MAX_VALUE;		
+		List<Integer> checkLines= new ArrayList<Integer>(state.checkLines(player));
+		return ((checkLines.get(1) * 9) + (checkLines.get(0) * 2)) - ((checkLines.get(3) * 9) + (checkLines.get(2) * 2));
 	}
 
 	private boolean isTerminal(int nodeHorizon) {
