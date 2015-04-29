@@ -27,7 +27,7 @@ public class GUIGrid extends JPanel
     
       public GUIGrid()
     {
-        frame = new JFrame("CONNECT 4");
+        frame = new JFrame("Connect Four");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setSize(560, 560);
