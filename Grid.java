@@ -1,18 +1,15 @@
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class Grid {
-	private class NConnectedSequers
-	{
-		public boolean isNotNull = false;// this var. will be true only if there is n Connected Sequers
-		public ArrayList<int[]> sequersPostion = new ArrayList<>();
-		
-	}
-	public Grid() {
+    
+	Grid() {
 		cols = 7;
 		rows = 6;
+                winningPositions = new ArrayList<>();
 		hasWon = false;
 		grid = new char[7][6];
 		for( int i = 0 ; i < grid.length ; i++ ) { 
@@ -179,25 +176,6 @@ public class Grid {
 		return returnList;
 	}
 	
-	private NConnectedSequers checkRWhitPostions (int n, int col, int row) {
-		NConnectedSequers connectedS = new NConnectedSequers();
-		char p = grid[col][row];
-		int countMe = 0;
-		for(int i=col;i<col+n && i<cols;i++) {
-			if (grid[i][row] == p)
-				countMe++;
-			int arr[] = new int[2];
-			arr[0] = i;
-			arr[1] = row;
-			connectedS.sequersPostion.add(arr);
-			}
-		if (countMe == n){
-			connectedS.isNotNull = true;
-			return connectedS;
-			}
-		else 
-			return connectedS;
-	}
 	
 	private List<Integer> checkC (int n, int col, int row) {
 		List<Integer> returnList = new ArrayList<Integer>();
@@ -226,26 +204,6 @@ public class Grid {
 		return returnList;
 	}
 	
-	
-	private NConnectedSequers checkCWhitPostions (int n, int col, int row) {
-		NConnectedSequers connectedS = new NConnectedSequers();
-		
-		char p = grid[col][row];
-		int countMe = 0;
-		for(int i=row;i<row+n && i<rows;i++) {
-			if (grid[col][i] == p)
-				countMe++;
-			int arr[] = new int[2];
-			arr[0] = col;
-			arr[1] = i;
-			connectedS.sequersPostion.add(arr);}
-		if (countMe == n){
-			connectedS.isNotNull = true;
-			return connectedS;
-			}
-		else 
-			return connectedS;
-	}
 	
 	
 	private List<Integer> checkDU (int n, int col, int row) {
@@ -297,24 +255,6 @@ public class Grid {
 	}
 	
 	
-	private NConnectedSequers checkDUWhitPostions (int n, int col, int row) {
-		NConnectedSequers connectedS = new NConnectedSequers();
-		char p = grid[col][row];
-		int countMe = 0;
-		for(int i=col,j=row;i<col+n && i<cols && j<row+n && j<rows;i++,j++) {
-			if (grid[i][j] == p)
-				countMe++;
-			int arr[] = new int[2];
-			arr[0] = i;
-			arr[1] = j;
-			connectedS.sequersPostion.add(arr);}
-		if (countMe== n){
-			connectedS.isNotNull = true;
-			return connectedS;
-			}
-		else 
-			return connectedS;
-	}
 	
 	private List<Integer> checkDD (int n, int col, int row) {
 		List<Integer> returnList = new ArrayList<Integer>();
@@ -364,26 +304,7 @@ public class Grid {
 		return returnList;
 	}
 	
-	
-	private NConnectedSequers checkDDWhitPostions (int n, int col, int row) {
-		NConnectedSequers connectedS = new NConnectedSequers();
-		char p = grid[col][row];
-		int countMe = 0;
-		for(int i=col,j=row;i<col+n && i<cols && j>row-n && j>-1;i++,j--) {
-			if (grid[i][j] == p)
-				countMe++;
-			int arr[] = new int[2];
-			arr[0] = i;
-			arr[1] = j;
-			connectedS.sequersPostion.add(arr);
-			}
-		if (countMe == n){
-			connectedS.isNotNull = true;
-			return connectedS;
-			}
-		else 
-			return connectedS;
-	}
+
         private boolean diagonalNE(char player, int col,int row)
 	{
 		boolean hasWonFlag = false;
@@ -392,6 +313,10 @@ public class Grid {
                     int sequersCount = 0;
                     while(grid[i][j] == player)
                         {
+                            int arr[] = new int[2];
+                            arr[0] = i;
+                            arr[1] = j;
+                            winningPositions.add(arr);
                             sequersCount++;
                             i++;j++;
                             if(sequersCount == 4)
@@ -399,9 +324,13 @@ public class Grid {
                                hasWonFlag = true;
                                 break;
                             }
+                            
                             if(i>=this.cols || j>=this.rows)
                             {break;}
                         }
+                    if(sequersCount == 4)
+                        break;
+                    winningPositions.clear();
 		}
 		return hasWonFlag;
 		
@@ -415,6 +344,10 @@ public class Grid {
                     int sequersCount = 0;
                     while(grid[i][j] == player)
                         {
+                            int arr[] = new int[2];
+                            arr[0] = i;
+                            arr[1] = j;
+                            winningPositions.add(arr);
                             sequersCount++;
                             i++;j--;
                             if(sequersCount == 4)
@@ -425,6 +358,10 @@ public class Grid {
                             if(i>=this.cols || j<0)
                             {break;}
                         }
+                    if(sequersCount == 4)
+                        break;
+                    winningPositions.clear();
+                    
 		}
 		return hasWonFlag;
 		
@@ -432,11 +369,17 @@ public class Grid {
         
         private boolean vertical(char player, int col,int row)
 	{
+            //winningPositions.clear();
 		boolean hasWinFlag = true;
-		for(int i = row-1 ; i>row-4 ;i--)
-		{ 
-			if(grid[col][i]!=player)
-			{
+		for(int i = row ; i>row-4 ;i--)
+		{
+                        int arr[] = new int[2];
+                        arr[0] = col;
+                        arr[1] = i;
+                        winningPositions.add(arr);
+                        if(grid[col][i]!=player)
+                        {
+                                winningPositions.clear();
 				hasWinFlag = false;
 				break;
 			}
@@ -453,6 +396,10 @@ public class Grid {
                     int sequersCount = 0;
                     while(grid[i][row] == player)
                         {
+                            int arr[] = new int[2];
+                            arr[0] = i;
+                            arr[1] = row;
+                            winningPositions.add(arr);
                             sequersCount++;
                             i++;
                             if(sequersCount == 4)
@@ -463,6 +410,9 @@ public class Grid {
                             if(i>=this.cols)
                             {break;}
                         }
+                    if(sequersCount == 4)
+                        break;
+                    winningPositions.clear();
 		}
  
 		return hasWonFlag;
@@ -558,39 +508,33 @@ public class Grid {
             ////////////////////////
             return false;
         }
-//	public boolean hasWon2(char player) { // We can think about this fun. as getter function
-//            for (int i=0;i<rows;i++) {
-//                for (int j=0;j<cols;j++) {
-//                    if (grid[j][i] == player) {
-//                        if( this.checkRWhitPostions(4, j, i).isNotNull
-//                                || this.checkCWhitPostions (4, j, i).isNotNull
-//                                || this.checkDUWhitPostions (4, j, i).isNotNull
-//                                || this.checkDDWhitPostions (4, j, i).isNotNull)
-//                        {
-//   //                         for(int r=0;r<4;r++)
-// //                           {
-////                            System.out.print(this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[0]+""+""+this.checkCWhitPostions (4, j, i).sequersPostion.get(r)[1]);
-//
-//                        //}
-//			this.hasWon = true;
-//                        //System.out.println("Current Date: " + ft.format(dNow));
-//			return hasWon;
-//                        
-//			}
-//                    }
-//                }
-//            }
-//            return false;
-//	}
+        
+        
  	public boolean getHasWon(){
  		return hasWon; 
  	}
+        public int getX_lastTry_R() {
+            return x_lastTry_R;
+        }
+        public int getY_lastTry_R() {
+            return y_lastTry_R;
+        }
+        public int getX_LastTry_C() {
+            return x_LastTry_C;
+        }
+
+        public int getY_LastTry_C() {
+            return y_LastTry_C;
+        }
+        
+        
         private int x_LastTry_C; // these vars. will be used by HasWon.
         private int x_lastTry_R; //^
         private int y_LastTry_C; //^
         private int y_lastTry_R; //^
 	private boolean hasWon;
-	private int rows;
-	private int cols;
+	private final int rows;
+	private final int cols;
 	private char[][] grid;// = new int[6][5];
+        public ArrayList<int[]> winningPositions;
 	}

@@ -1,21 +1,20 @@
-package connect4;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+//import java.util.*;// no need for * !!
 public class IntelligentAgent extends Player {
-	private int horizon = 8;
+	private final int horizon = 8;
+        @Override
 	public void startPlaying (Grid board, char player) 
 	{ 
-		super.intelligenceMode=true; 
+		super.intelligenceMode=true;
 		super.startPlaying(board, player);
 	}
+        @Override
 	public char intelligence(Grid board, char player)
 	{	
-		board.refreshBoard(alphaBetaSearch(board,player), player)
-		if(board.hasWon(player))
-		{
-			System.out.println("Player: "+ player + " has won!"); 
-			board.drawBoard();
-			System.exit(1);
-		}
+		board.refreshBoard(alphaBetaSearch(board,player), player);
+                
 		if(player =='Y')
 			return 'X'; 
 		return 'Y'; 
