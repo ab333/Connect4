@@ -65,7 +65,10 @@ public class Connect4 implements ActionListener{
                         smart.activateAgentVsAgent();
                         smart.startPlaying(g, player);
                     }
-                }
+                } catch (Exception ee)
+                        {
+                            System.err.print("ERORR" + ee);
+                        }
             }
 	}
 }

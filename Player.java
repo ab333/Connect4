@@ -3,7 +3,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 //import java.util.Scanner;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class Player implements ActionListener {
@@ -154,7 +153,7 @@ public class Player implements ActionListener {
 		
 	} 
 	
-	public char randomAgent(Grid board, char player)
+	private char randomAgent(Grid board, char player)
 	{
 		do {
 			Random rand = new Random();
@@ -163,7 +162,7 @@ public class Player implements ActionListener {
 //		board.hasWon(player);
 		return 'X'; 	
 	}	
-	public char intelligence(Grid board, char player) {
+	protected char intelligence(Grid board, char player) {
 		return 'X'; 
 	}
 }
