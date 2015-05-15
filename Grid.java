@@ -20,7 +20,7 @@ public class Grid {
 	}
 		//grid[1][1] = 5;
 	///-----Functions for AI Agent to use-------/// 
-	public void validMoves(List<Integer> valid)
+	public void getValidMoves(List<Integer> valid)
 	{
 		for (int i=0; i<cols;i++)
 			for(int j=0; j<rows;j++)
@@ -29,7 +29,7 @@ public class Grid {
 					break; 
 				}
 	}
-	public int lastRow(int col)
+	public int getLastRow(int col)
 	{
 		for (int i=rows-1; i>-1; i--){
 			if(grid[col][i]!='_')
@@ -510,7 +510,7 @@ public class Grid {
         }
         
         
- 	public boolean getHasWon(){
+ 	public boolean isThereAWin(){
  		return hasWon; 
  	}
         public int getX_lastTry_R() {
