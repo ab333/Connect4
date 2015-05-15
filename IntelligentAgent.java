@@ -1,123 +1,153 @@
-package Connect4new;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
 //import java.util.*;// no need for * !!
-
-// Support agent play against himself // 
+ 
 public class IntelligentAgent extends Player {
 	private final int MAX_HORIZON = 8; 
 	private final int POSITIVE_INFINITY = Integer.MAX_VALUE; 
 	private final int MINUS_INFINITY = -Integer.MAX_VALUE;
+	private char firstPlayer; 
+	private char opponent; 
+	private Grid state; 
+ 
         @Override
 	public void startPlaying (Grid board, char player) { 
-		super.intelligenceMode=true;
+		super.intelligenceMode = true;
 		super.startPlaying(board, player);
 	}
         @Override
-	public char intelligence(Grid board, char player) {	
-		board.refreshBoard(alphaBetaSearch(board,player), player);
-		if(player =='Y')
-			return 'X'; 
-		return 'Y'; 
+	public char intelligence(Grid board, char player) {
+        state = board; 
+        playMove(player);
+	return (player == 'Y')? 'X': 'Y'; 
 	}
 	
-	protected int alphaBetaSearch (Grid board, char player)
-	{
-		return getBestMove(board, player);
+	private void playMove(char player) {
+		state.refreshBoard(alphaBetaSearch(player), player);
+	}
+	protected int alphaBetaSearch (char player) {
+		firstPlayer  = player; 
+		opponent = (firstPlayer=='X')?'Y':'X';
+		return getBestMove();
 	}
 
-	private int getBestMove(Grid board, char player) {
+	private int getBestMove() {
 		Integer [] childsValue;
 		childsValue = new Integer[7];
-		int dummyTemp = MINUS_INFINITY;
-		int bestMoveValue = dummyTemp;
-		List<Integer> validMoves = new ArrayList<Integer>() ;
-		board.getValidMoves(validMoves);
-		for (int i=0; i<validMoves.size(); i++){
-			board.refreshBoard(validMoves.get(i), player);
-			dummyTemp = minValue(board,MINUS_INFINITY,POSITIVE_INFINITY, 0, player);
-			childsValue[i]=dummyTemp;
-			if (dummyTemp>bestMoveValue)
-				bestMoveValue = dummyTemp; 
-			board.removeMove(validMoves.get(i), board.lastRow(validMoves.get(i)));
-			if(bestMoveValue==POSITIVE_INFINITY)
+		int temp = MINUS_INFINITY;
+		int bestMoveValue = temp;
+		List<Integer> childrens = new ArrayList<Integer>() ;
+		createChildrens(childrens);
+		for (int i = 0; i<childrens.size(); i++){
+			goToChild(childrens.get(i), firstPlayer);
+			temp = minValue(MINUS_INFINITY,POSITIVE_INFINITY, 0); 
+			childsValue[i] = temp;
+			assignMaxChildValueToBestMove(bestMoveValue, temp);
+			goBackToParent(childrens.get(i));
+			if(thereIsAWinMove(bestMoveValue))
 				break; 
-			}  
-		return validMoves.get(java.util.Arrays.asList(childsValue).indexOf(bestMoveValue)); 
+			}
+		int bestMoveIndex = java.util.Arrays.asList(childsValue).indexOf(bestMoveValue); 
+		return childrens.get(bestMoveIndex); 
 	}
-	private int minValue (Grid state, int alpha, int beta, int depth, char player) {
-		int holder= POSITIVE_INFINITY;
-		List<Integer> validMoves = new ArrayList<Integer>() ;
-		state.getValidMoves(validMoves); 
-		if(isTerminal(state, depth, validMoves))
-			return evaluation(state, player);
-		for (int i=0; i<validMoves.size(); i++)
+
+	private void createChildrens(List<Integer> childrens) {
+		state.getValidMoves(childrens);
+	}
+	
+	private void goToChild(int action, char player) {
+		state.refreshBoard(action, player);
+	}
+	
+	private void assignMaxChildValueToBestMove(int bestMoveValue, int temp) {
+		bestMoveValue = Math.max(bestMoveValue, temp);  
+	}
+	
+	private void goBackToParent(int action) {
+		state.removeMove(action, state.getLastRow(action));
+	}
+	
+	private boolean thereIsAWinMove(int bestMoveValue) {
+		return (bestMoveValue==POSITIVE_INFINITY);
+	}
+	
+	private int minValue (int alpha, int beta, int depth) {
+		int holder = POSITIVE_INFINITY;
+		List<Integer> childrens = new ArrayList<Integer>() ;
+		createChildrens(childrens); 
+		if(isTerminal(depth))
+			return evaluation();
+		for (int i=0; i<childrens.size(); i++)
 		{	
-			if(player=='Y')
-				state.refreshBoard(validMoves.get(i), 'X');
-			else 
-				state.refreshBoard(validMoves.get(i), 'Y');
-			holder = Math.min(holder, maxValue(state, alpha, beta, depth+1, player)); 
-			if (holder<=alpha){ 
-				state.removeMove(validMoves.get(i), state.lastRow(validMoves.get(i)));
-				return holder;//beta cut-off
+			
+			goToChild(childrens.get(i), opponent);
+	
+			holder = Math.min(holder, maxValue(alpha, beta, depth+1)); 
+
+			if (isBetaCutOff(holder,alpha)) { 
+				goBackToParent(childrens.get(i)); 
+				break;
 			}
 			beta = Math.min(holder, beta);
-			state.removeMove(validMoves.get(i), state.lastRow(validMoves.get(i)));
-
+			goBackToParent(childrens.get(i)); 
 		} 
 		return holder; 
 	}
-	private int maxValue(Grid state, int alpha, int beta, int depth, char player) {
-		int holder= MINUS_INFINITY;
-		List<Integer> validMoves = new ArrayList<Integer>() ;
-		state.getValidMoves(validMoves); 
-		if(isTerminal(state, depth, validMoves))
-			return evaluation(state, player);
-		for (int i=0; i<validMoves.size();i++)
+	
+	private boolean isTerminal(int nodeHorizon) {
+		return (nodeHorizon>=MAX_HORIZON || state.isThereAWin() || state.isBoardFull());
+	}
+
+	private int evaluation() { 
+		if(isCurrentAgentLost())
+			return MINUS_INFINITY;
+		else if(isCurrentAgentWon()) 
+			return POSITIVE_INFINITY;		
+		return estimateBoardToPlayer(); 
+	}
+
+	private boolean isCurrentAgentLost() { 
+		return state.hasWon(opponent);
+	}
+	private boolean isCurrentAgentWon() {
+		return state.hasWon(firstPlayer);
+	}
+	
+	private int estimateBoardToPlayer() {
+		List<Integer> linesCombination = new ArrayList<Integer>(state.checkLines(firstPlayer));
+		return ((linesCombination.get(1) * 9) + (linesCombination.get(0) * 2)) - ((linesCombination.get(3) * 9) + (linesCombination.get(2) * 2));
+	}
+
+	private boolean isBetaCutOff(int holder, int alpha) {
+		return holder <= alpha;
+	}
+	
+	private int maxValue(int alpha, int beta, int depth) {
+		int holder = MINUS_INFINITY;
+		List<Integer> childrens = new ArrayList<Integer>() ;
+		state.getValidMoves(childrens); 
+		if(isTerminal(depth))
+			return evaluation();
+		for (int i=0; i<childrens.size();i++) 
 		{
-			state.refreshBoard(validMoves.get(i), player);
-			holder= Math.max(holder,minValue(state,alpha,beta, depth+1, player)); 
-			if (holder>=beta){
-				state.removeMove(validMoves.get(i), state.lastRow(validMoves.get(i)));
-				return holder;//alpha cut-off
+			this.goToChild(childrens.get(i), firstPlayer);
+	 
+			holder = Math.max(holder, minValue(alpha,beta, depth+1)); 
+			
+			if (isAlphaCuttOff(holder,beta)){
+				goBackToParent(childrens.get(i));
+				break;
 			}
+	 
 			alpha = Math.max(holder,alpha); 
-			state.removeMove(validMoves.get(i), state.lastRow(validMoves.get(i)));
+			this.goBackToParent(childrens.get(i));
 		}
 		return holder; 
 	}
 	
-	
-	private int evaluation(Grid state, char player) { 
-		if(isCurrentAgentLost(state, player))
-			return MINUS_INFINITY;
-		else if(isCurrentAgentWon(state,player)) 
-			return POSITIVE_INFINITY;		
-		return estimateBoard(state, player); 
+	private boolean isAlphaCuttOff(int holder, int beta) {
+		return holder >= beta; 
 	}
 
-	private int estimateBoard(Grid state, char player) {
-		List<Integer> checkLines= new ArrayList<Integer>(state.checkLines(player));
-		return ((checkLines.get(1) * 9) + (checkLines.get(0) * 2)) - ((checkLines.get(3) * 9) + (checkLines.get(2) * 2));
-	}
-	private boolean isTerminal(Grid state, int nodeHorizon, List<Integer> validMoves) {
-		if (nodeHorizon>=MAX_HORIZON || state.getHasWon() || validMoves.size() == 0)
-			return true; 
-		return false; 
-
-	}
-	private boolean isCurrentAgentLost(Grid state, char player) { 
-		if(player == 'Y' && state.hasWon('X'))
-			return true; 
-			else if(player== 'X' && state.hasWon('Y'))
-				return true; 
-		return false; 
-	}
-	private boolean isCurrentAgentWon(Grid state, char player) {
-		return(state.hasWon(player));
-	}
 }
