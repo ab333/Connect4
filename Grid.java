@@ -1,30 +1,39 @@
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class Grid {
-    
+    private int x_LastTry_C; // these vars. will be used by HasWon.
+    private int x_lastTry_R; //^
+    private int y_LastTry_C; //^
+    private int y_lastTry_R; //^
+	private boolean hasWon;
+	private final int rows;
+	private final int cols;
+	private final char[][] GRID;
+        public ArrayList<int[]> winningPositions;
 	Grid() {
 		cols = 7;
 		rows = 6;
-                winningPositions = new ArrayList<>();
+        winningPositions = new ArrayList<>();
 		hasWon = false;
-		grid = new char[7][6];
-		for( int i = 0 ; i < grid.length ; i++ ) { 
-	           for ( int j = 0 ; j < grid[i].length ; j++ ) { 
-	              grid[i][j] = '_';
-	           }
-		}
+		GRID = new char[7][6];
+            for (char[] GRID1 : GRID) {
+                for (int j = 0; j < GRID1.length; j++) {
+                    GRID1[j] = '_';
+                }
+            }
 	}
-		//grid[1][1] = 5;
-	///-----Functions for AI Agent to use-------/// 
+	///-----Functions for AI Agent to use-------///
+ 	public boolean isThereAWin(){
+ 		return hasWon; 
+ 	}
 	public void getValidMoves(List<Integer> valid)
 	{
 		for (int i=0; i<cols;i++)
 			for(int j=0; j<rows;j++)
-				if(grid[i][j]=='_'){
+				if(GRID[i][j]=='_'){
 					valid.add(i);
 					break; 
 				}
@@ -32,7 +41,7 @@ public class Grid {
 	public int getLastRow(int col)
 	{
 		for (int i=rows-1; i>-1; i--){
-			if(grid[col][i]!='_')
+			if(GRID[col][i]!='_')
 				return i;
 			}
 		return 0;
@@ -40,7 +49,7 @@ public class Grid {
 
 	public void removeMove(int col, int row) {
 		if(col<cols && col>=0 && row >=0 && row<rows)
-			grid[col][row]='_';
+			GRID[col][row]='_';
 		if(hasWon)
 			hasWon=false;
 	}
@@ -50,8 +59,8 @@ public class Grid {
 			System.out.print(" " + n + " ");
 		System.out.println();
 		for(int i=5;i>-1;i--) {
-			for(int j=0;j<grid.length;j++) {
-				System.out.print(" " + grid[j][i] + " ");
+			for(int j=0;j<GRID.length;j++) {
+				System.out.print(" " + GRID[j][i] + " ");
 			}
 			System.out.println();
 		}
@@ -61,11 +70,11 @@ public class Grid {
 	public boolean refreshBoard (int col, char disc) {
 		if (col > cols-1 || col < 0)
 			return false;
-		else if(boardFull()) // when called outside Startplaying. must check before play. 
+		else if(isBoardFull()) 
 			return false; 
 		for (int i=0;i<6;i++)
-			if(grid[col][i] == '_') {
-				grid[col][i] = disc;
+			if(GRID[col][i] == '_') {
+				GRID[col][i] = disc;
                                 if(disc == 'X')
                                 {
                                     this.x_LastTry_C = col;
@@ -81,9 +90,9 @@ public class Grid {
 			}
 		return false;
 	}
-	public boolean boardFull () {
+	public boolean isBoardFull () {
 		for (int i=0;i<cols;i++) {
-			if (grid[i][rows-1] == '_')
+			if (GRID[i][rows-1] == '_')
 				return false;
 		}
 		return true;
@@ -91,14 +100,14 @@ public class Grid {
 	
 	
 	public List<Integer> checkLines (char p) {
-		List<Integer> returnList = new ArrayList<Integer>();
-		List<Integer> listX = new ArrayList<Integer>();
-		List<Integer> listO = new ArrayList<Integer>();
+		List<Integer> returnList = new ArrayList<>();
+		List<Integer> listX = new ArrayList<>();
+		List<Integer> listO = new ArrayList<>();
 		int countX = 0;
 		int countO = 0;
 		for (int i=0;i<rows;i++) {
 			for (int j=0;j<cols;j++) {
-				if (grid[j][i] == p) {
+				if (GRID[j][i] == p) {
 					//count += checkR (3, j, i).size()+checkC (3, j, i).size()+checkDU (3, j, i).size()+checkDD (3, j, i).size();
 					listX.addAll(checkR (3, j, i));
 					listX.addAll(checkC (3, j, i));
@@ -106,7 +115,7 @@ public class Grid {
 					listX.addAll(checkDD (3, j, i));
 					countX += checkR (2, j, i).size()+checkC (2, j, i).size()+checkDU (2, j, i).size()+checkDD (2, j, i).size();
 				}
-				else if (grid[j][i] == '_')
+				else if (GRID[j][i] == '_')
 					;
 				else {
 					//count += checkR (3, j, i).size()+checkC (3, j, i).size()+checkDU (3, j, i).size()+checkDD (3, j, i).size();
@@ -118,58 +127,58 @@ public class Grid {
 				}
 			}
 		}
-		Set<Integer> uniqueList = new HashSet<Integer>(listX);
+		Set<Integer> uniqueList = new HashSet<>(listX);
 		returnList.add(countX);
 		returnList.add(uniqueList.size());
-		uniqueList = new HashSet<Integer>(listO);
+		uniqueList = new HashSet<>(listO);
 		returnList.add(countO);
 		returnList.add(uniqueList.size());
 		return returnList;
 	}
 	
 	private List<Integer> checkR (int n, int col, int row) {
-		List<Integer> returnList = new ArrayList<Integer>();
+		List<Integer> returnList = new ArrayList<>();
 		//List<Integer> nullLocations = new ArrayList<Integer>();
 		int nullLocation = 99;
-		char p = grid[col][row];
+		char p = GRID[col][row];
 		int countMe = 0;
 		int i;
 
 		for(i=col;i<col+n && i<cols;i++) {
-			if (grid[i][row] == p)
+			if (GRID[i][row] == p)
 				countMe++;
-			else if (grid[i][row] == '_') 
+			else if (GRID[i][row] == '_') 
 				nullLocation = (i*10)+(row);
 			else 
 				return returnList;//return null;
 		}
-		if ((countMe == n && col-1>-1 && grid[col-1][row] == '_') || (countMe == n && i<cols && grid[i][row] == '_')) {
+		if ((countMe == n && col-1>-1 && GRID[col-1][row] == '_') || (countMe == n && i<cols && GRID[i][row] == '_')) {
 			// two-sided 3s check (_XXX_)
-			if(n == 3 && col-1>-1 && grid[col-1][row] == '_')
+			if(n == 3 && col-1>-1 && GRID[col-1][row] == '_')
 				returnList.add((col-1)*10+(row));//return 1;
-			if(n == 3 && i<cols && grid[i][row] == '_')
+			if(n == 3 && i<cols && GRID[i][row] == '_')
 				returnList.add((i*10)+(row));
 			if(n == 2) {
 				// useless 2s check (OXX_O)
 				int usableTest = 0;
-				if(col-1>-1 &&( grid[col-1][row] == p))
+				if(col-1>-1 &&( GRID[col-1][row] == p))
 					return returnList;
-				if(col-1>-1 &&( grid[col-1][row] == '_'))// || grid[col-1][row] == p ))
+				if(col-1>-1 &&( GRID[col-1][row] == '_'))// || grid[col-1][row] == p ))
 					usableTest += 10;
-				if(col-2>-1 &&( grid[col-2][row] == '_'))// || grid[col-2][row] == p))
+				if(col-2>-1 &&( GRID[col-2][row] == '_'))// || grid[col-2][row] == p))
 					usableTest += 2;
-				if(i<cols &&( grid[i][row] == p))
+				if(i<cols &&( GRID[i][row] == p))
 					return returnList;
-				if(i<cols &&( grid[i][row] == '_'))// || grid[i][row] == p))
+				if(i<cols &&( GRID[i][row] == '_'))// || grid[i][row] == p))
 					usableTest += 20;
-				if(i+1<cols &&( grid[i+1][row] == '_'))// || grid[i+1][row] == p))
+				if(i+1<cols &&( GRID[i+1][row] == '_'))// || grid[i+1][row] == p))
 					usableTest += 4;
 				if(usableTest > 23 || usableTest == 12 || usableTest == 16)
 					returnList.add((col*10)+(row));
 			}
 		}
 		// disjoint 3s check (XX_X)
-		else if (countMe == 2 && n == 3 && i<cols && grid[i][row] == p)
+		else if (countMe == 2 && n == 3 && i<cols && GRID[i][row] == p)
 			returnList.add(nullLocation);//return 1;
 		else
 			;//return 0;
@@ -178,25 +187,25 @@ public class Grid {
 	
 	
 	private List<Integer> checkC (int n, int col, int row) {
-		List<Integer> returnList = new ArrayList<Integer>();
-		char p = grid[col][row];
+		List<Integer> returnList = new ArrayList<>();
+		char p = GRID[col][row];
 		int countMe = 0;
 		int i;
 		if (row > 2) // TODO check 2 or 1?
 			return returnList;
 		for(i=row;i<row+n && i<rows;i++) {
-			if (grid[col][i] == p)
+			if (GRID[col][i] == p)
 				countMe++;
-			else if (grid[col][i] == '_')
+			else if (GRID[col][i] == '_')
 				;
 			else
 				return returnList;
 		}
-		if ((countMe == n && i<rows && grid[col][i] == '_')) {
+		if ((countMe == n && i<rows && GRID[col][i] == '_')) {
 			if (n == 3)
 				returnList.add((col*10)+(i));
 			if (n == 2)
-				if (row-1>-1 && grid[col][row-1] == p)
+				if (row-1>-1 && GRID[col][row-1] == p)
 					return returnList;
 				else
 					returnList.add((col*10)+(row));
@@ -207,47 +216,47 @@ public class Grid {
 	
 	
 	private List<Integer> checkDU (int n, int col, int row) {
-		List<Integer> returnList = new ArrayList<Integer>();
-		char p = grid[col][row];
+		List<Integer> returnList = new ArrayList<>();
+		char p = GRID[col][row];
 		int countMe = 0;
 		int nullLocation = 99;
 		int i;
 		int j;
 		for(i=col,j=row;i<col+n && i<cols && j<row+n && j<rows;i++,j++) {
-			if (grid[i][j] == p)
+			if (GRID[i][j] == p)
 				countMe++;
-			else if (grid[i][j] == '_') 
+			else if (GRID[i][j] == '_') 
 				nullLocation = (i*10)+(j);
 			else
 				return returnList;
 		}
-		if ((countMe == n && col-1>-1 && row-1>-1 && grid[col-1][row-1] == '_') || (countMe == n && i<cols && j<rows && grid[i][j] == '_')) {
+		if ((countMe == n && col-1>-1 && row-1>-1 && GRID[col-1][row-1] == '_') || (countMe == n && i<cols && j<rows && GRID[i][j] == '_')) {
 			// two-sided 3s check (_XXX_)
-			if(n == 3 && col-1>-1 && row-1>-1 && grid[col-1][row-1] == '_')
+			if(n == 3 && col-1>-1 && row-1>-1 && GRID[col-1][row-1] == '_')
 				returnList.add((col-1)*10+(row-1));//return 1;
-			if(n == 3 && i<cols && j<rows && grid[i][j] == '_')
+			if(n == 3 && i<cols && j<rows && GRID[i][j] == '_')
 				returnList.add((i*10)+(j));
 			if(n == 2) {
 				// useless 2s check (OXX_O)
 				int usableTest = 0;
-				if(col-1>-1 && row-1>-1 &&( grid[col-1][row-1] == p))
+				if(col-1>-1 && row-1>-1 &&( GRID[col-1][row-1] == p))
 					return returnList;
-				if(col-1>-1 && row-1>-1 &&( grid[col-1][row-1] == '_'))// || grid[col-1][row-1] == p))
+				if(col-1>-1 && row-1>-1 &&( GRID[col-1][row-1] == '_'))// || grid[col-1][row-1] == p))
 					usableTest += 10;
-				if(col-2>-1 && row-2>-1 &&( grid[col-2][row-2] == '_'))// || grid[col-2][row-2] == p))
+				if(col-2>-1 && row-2>-1 &&( GRID[col-2][row-2] == '_'))// || grid[col-2][row-2] == p))
 					usableTest += 2;
-				if(i<cols && j<rows &&( grid[i][j] == p))
+				if(i<cols && j<rows &&( GRID[i][j] == p))
 					return returnList;
-				if(i<cols && j<rows &&( grid[i][j] == '_'))// || grid[i][j] == p))
+				if(i<cols && j<rows &&( GRID[i][j] == '_'))// || grid[i][j] == p))
 					usableTest += 20;
-				if(i+1<cols && j+1<rows &&( grid[i+1][j+1] == '_'))// || grid[i+1][j+1] == p))
+				if(i+1<cols && j+1<rows &&( GRID[i+1][j+1] == '_'))// || grid[i+1][j+1] == p))
 					usableTest += 4;
 				if(usableTest > 23 || usableTest == 12 || usableTest == 16)
 					returnList.add((col*10)+(row));
 			}
 		}
 		// disjoint 3s check (XX_X)
-		else if (countMe == 2 && n == 3 && i<cols && j<rows && grid[i][j] == p)
+		else if (countMe == 2 && n == 3 && i<cols && j<rows && GRID[i][j] == p)
 			returnList.add(nullLocation);//return 1;
 		else 
 			;
@@ -257,47 +266,47 @@ public class Grid {
 	
 	
 	private List<Integer> checkDD (int n, int col, int row) {
-		List<Integer> returnList = new ArrayList<Integer>();
-		char p = grid[col][row];
+		List<Integer> returnList = new ArrayList<>();
+		char p = GRID[col][row];
 		int countMe = 0;
 		int i;
 		int j;
 		int nullLocation = 99;
 		for(i=col,j=row;i<col+n && i<cols && j>row-n && j>-1;i++,j--) {
-			if (grid[i][j] == p)
+			if (GRID[i][j] == p)
 				countMe++;
-			else if (grid[i][j] == '_') 
+			else if (GRID[i][j] == '_') 
 				nullLocation = (i*10)+(j);
 			else
 				return returnList;
 		}
-		if ((countMe == n && col-1>-1 && row+1<rows && grid[col-1][row+1] == '_') || (countMe == n && i<cols && j>-1 && grid[i][j] == '_')) {
+		if ((countMe == n && col-1>-1 && row+1<rows && GRID[col-1][row+1] == '_') || (countMe == n && i<cols && j>-1 && GRID[i][j] == '_')) {
 			// two-sided 3s check (_XXX_)
-			if(n == 3 && col-1>-1 && row+1<rows && grid[col-1][row+1] == '_')
+			if(n == 3 && col-1>-1 && row+1<rows && GRID[col-1][row+1] == '_')
 				returnList.add((col-1)*10+(row+1));//return 1;
-			if(n == 3 && i<cols && j>-1 && grid[i][j] == '_')
+			if(n == 3 && i<cols && j>-1 && GRID[i][j] == '_')
 				returnList.add((i*10)+(j));
 			if(n == 2) {
 				// useless 2s check (OXX_O)
 				int usableTest = 0;
-				if(col-1>-1 && row+1<rows &&( grid[col-1][row+1] == p))
+				if(col-1>-1 && row+1<rows &&( GRID[col-1][row+1] == p))
 					return returnList;
-				if(col-1>-1 && row+1<rows &&( grid[col-1][row+1] == '_'))// || grid[col-1][row+1] == p))
+				if(col-1>-1 && row+1<rows &&( GRID[col-1][row+1] == '_'))// || grid[col-1][row+1] == p))
 					usableTest += 10;
-				if(col-2>-1 && row+2<rows &&( grid[col-2][row+2] == '_'))// || grid[col-2][row+2] == p))
+				if(col-2>-1 && row+2<rows &&( GRID[col-2][row+2] == '_'))// || grid[col-2][row+2] == p))
 					usableTest += 2;
-				if(i<cols && j>-1 &&( grid[i][j] == p))
+				if(i<cols && j>-1 &&( GRID[i][j] == p))
 					return returnList;
-				if(i<cols && j>-1 &&( grid[i][j] == '_'))// || grid[i][j] == p))
+				if(i<cols && j>-1 &&( GRID[i][j] == '_'))// || grid[i][j] == p))
 					usableTest += 20;
-				if(i+1<cols && j-1>-1 &&( grid[i+1][j-1] == '_'))// || grid[i+1][j-1] == p))
+				if(i+1<cols && j-1>-1 &&( GRID[i+1][j-1] == '_'))// || grid[i+1][j-1] == p))
 					usableTest += 4;
 				if(usableTest > 23 || usableTest == 12 || usableTest == 16)
 					returnList.add((col*10)+(row));
 			}
 		}
 		// disjoint 3s check (XX_X)
-		else if (countMe == 2 && n == 3 && i<cols && j>-1 && grid[i][j] == p)
+		else if (countMe == 2 && n == 3 && i<cols && j>-1 && GRID[i][j] == p)
 			returnList.add(nullLocation);//return 1;
 		else 
 			;
@@ -311,7 +320,7 @@ public class Grid {
 		for(int i=col,j=row; i<this.cols && j<this.rows ;i++,j++)
 		{
                     int sequersCount = 0;
-                    while(grid[i][j] == player)
+                    while(GRID[i][j] == player)
                         {
                             int arr[] = new int[2];
                             arr[0] = i;
@@ -342,7 +351,7 @@ public class Grid {
 		for(int i=col,j=row; i<this.cols && j>-1 ;i++,j--)
 		{
                     int sequersCount = 0;
-                    while(grid[i][j] == player)
+                    while(GRID[i][j] == player)
                         {
                             int arr[] = new int[2];
                             arr[0] = i;
@@ -377,7 +386,7 @@ public class Grid {
                         arr[0] = col;
                         arr[1] = i;
                         winningPositions.add(arr);
-                        if(grid[col][i]!=player)
+                        if(GRID[col][i]!=player)
                         {
                                 winningPositions.clear();
 				hasWinFlag = false;
@@ -394,7 +403,7 @@ public class Grid {
 		for(int i = col ; i< this.cols; i++)
 		{
                     int sequersCount = 0;
-                    while(grid[i][row] == player)
+                    while(GRID[i][row] == player)
                         {
                             int arr[] = new int[2];
                             arr[0] = i;
@@ -510,9 +519,6 @@ public class Grid {
         }
         
         
- 	public boolean isThereAWin(){
- 		return hasWon; 
- 	}
         public int getX_lastTry_R() {
             return x_lastTry_R;
         }
@@ -526,15 +532,5 @@ public class Grid {
         public int getY_LastTry_C() {
             return y_LastTry_C;
         }
-        
-        
-        private int x_LastTry_C; // these vars. will be used by HasWon.
-        private int x_lastTry_R; //^
-        private int y_LastTry_C; //^
-        private int y_lastTry_R; //^
-	private boolean hasWon;
-	private final int rows;
-	private final int cols;
-	private char[][] grid;// = new int[6][5];
-        public ArrayList<int[]> winningPositions;
+       
 	}
