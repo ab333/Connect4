@@ -43,7 +43,7 @@ public class IntelligentAgent extends Player {
 			goToChild(childrens.get(i), firstPlayer);
 			temp = minValue(MINUS_INFINITY,POSITIVE_INFINITY, 0); 
 			childsValue[i] = temp;
-			assignMaxChildValueToBestMove(bestMoveValue, temp);
+			bestMoveValue = assignMaxChildValueToBestMove(bestMoveValue, temp);
 			goBackToParent(childrens.get(i));
 			if(thereIsAWinMove(bestMoveValue))
 				break; 
@@ -60,8 +60,8 @@ public class IntelligentAgent extends Player {
 		state.refreshBoard(action, player);
 	}
 	
-	private void assignMaxChildValueToBestMove(int bestMoveValue, int temp) {
-		bestMoveValue = Math.max(bestMoveValue, temp);  
+	private int assignMaxChildValueToBestMove(int bestMoveValue, int temp) {
+		return Math.max(bestMoveValue, temp);  
 	}
 	
 	private void goBackToParent(int action) {
