@@ -12,7 +12,7 @@ public class Grid {
 	private final int rows;
 	private final int cols;
 	private final char[][] GRID;
-        public ArrayList<int[]> winningPositions;
+    public ArrayList<int[]> winningPositions;
 	Grid() {
 		cols = 7;
 		rows = 6;
@@ -29,8 +29,7 @@ public class Grid {
  	public boolean isThereAWin(){
  		return hasWon; 
  	}
-	public void getValidMoves(List<Integer> valid)
-	{
+	public void getValidMoves(List<Integer> valid) {
 		for (int i=0; i<cols;i++)
 			for(int j=0; j<rows;j++)
 				if(GRID[i][j]=='_'){
@@ -38,8 +37,7 @@ public class Grid {
 					break; 
 				}
 	}
-	public int getLastRow(int col)
-	{
+	public int getLastRow(int col) {
 		for (int i=rows-1; i>-1; i--){
 			if(GRID[col][i]!='_')
 				return i;
